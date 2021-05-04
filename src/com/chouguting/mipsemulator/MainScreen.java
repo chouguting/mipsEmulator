@@ -108,7 +108,6 @@ public class MainScreen extends JFrame implements ActionListener {
         this.add(runButton);
         this.add(stepButton);
         this.setVisible(true);
-
     }
 
     @Override
@@ -154,6 +153,7 @@ public class MainScreen extends JFrame implements ActionListener {
             this.currentProgramCounterLine = -1;
             stepButton.setEnabled(true);
             scrollCodingPart.setBorder(new LineBorder(Color.CYAN, 5));
+            scrollCodingPart.getVerticalScrollBar().setValue(0);
         }
 
         if (e.getSource() == stepButton) {
