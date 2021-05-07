@@ -145,7 +145,7 @@ public class MainScreen extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == newFileButton) {
-            int answer = JOptionPane.showConfirmDialog(null, "建立新檔案將會清除掉未儲存的資料\n確定繼續?", "建立新檔案", JOptionPane.YES_NO_CANCEL_OPTION);
+            int answer = JOptionPane.showConfirmDialog(this, "建立新檔案將會清除掉未儲存的資料\n確定繼續?", "建立新檔案", JOptionPane.YES_NO_CANCEL_OPTION);
             if (answer == 0) codingArea.setText("");
         }
 
