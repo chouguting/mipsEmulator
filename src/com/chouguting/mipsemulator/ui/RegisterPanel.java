@@ -1,4 +1,4 @@
-package com.chouguting.mipsemulator;
+package com.chouguting.mipsemulator.ui;
 
 import javax.swing.*;
 

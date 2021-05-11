@@ -1,11 +1,10 @@
-package com.chouguting.mipsemulator;
+package com.chouguting.mipsemulator.ui;
+
+import com.chouguting.mipsemulator.execution.Program;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +17,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * MainScreen:這是主程式的使用者介面
+ * 包含一個可滾動(JScrollPane)的CodingArea(JTextArea)
+ * 包含五個功能按鈕(新檔案、存檔、載入檔案、編譯、執行、逐行跑)
+ * 寫好的程式會變成一個Program物件
+ */
 public class MainScreen extends JFrame implements ActionListener {
     JFileChooser fileChooser = new JFileChooser();
     private JButton openFileButton = new JButton();
@@ -28,8 +33,8 @@ public class MainScreen extends JFrame implements ActionListener {
     private JButton runButton = new JButton();
     private JButton stepButton = new JButton();
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
-    private int currentProgramCounterLine = 0;
-    private Highlighter.HighlightPainter painter;
+
+    private Program myProgram;
 
     public MainScreen() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -150,24 +155,19 @@ public class MainScreen extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == assembleButton) {
-            this.currentProgramCounterLine = -1;
             stepButton.setEnabled(true);
             scrollCodingPart.setBorder(new LineBorder(Color.CYAN, 5));
             scrollCodingPart.getVerticalScrollBar().setValue(0);
+            myProgram = new Program(codingArea.getText());
+            instructionUIHandler.paintLine(codingArea, myProgram.getCurrentInstructionLocation());
         }
 
         if (e.getSource() == stepButton) {
-            if (currentProgramCounterLine + 1 < codingArea.getLineCount()) {
-                currentProgramCounterLine += 1;
-            }
-            try {
-                int startIndex = codingArea.getLineStartOffset(currentProgramCounterLine);
-                int endIndex = codingArea.getLineEndOffset(currentProgramCounterLine);
-                painter = new DefaultHighlighter.DefaultHighlightPainter(Color.cyan);
-                codingArea.getHighlighter().removeAllHighlights();
-                codingArea.getHighlighter().addHighlight(startIndex, endIndex, painter);
-            } catch (BadLocationException ble) {
-                ble.printStackTrace();
+            if (myProgram.isEnded()) {
+                instructionUIHandler.paintLine(codingArea, myProgram.getCurrentInstructionLocation() + 1);
+            } else {
+                myProgram.step();
+                instructionUIHandler.paintLine(codingArea, myProgram.getCurrentInstructionLocation());
             }
         }
     }
