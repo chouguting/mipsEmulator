@@ -5,4 +5,5 @@ public interface Operand {
 
     void setData(int inputData);
 
+
 }

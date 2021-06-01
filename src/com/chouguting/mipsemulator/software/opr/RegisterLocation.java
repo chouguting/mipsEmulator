@@ -18,4 +18,6 @@ public class RegisterLocation implements Operand {
     public void setData(int inputData) {
 
     }
+
+
 }

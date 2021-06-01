@@ -1,6 +1,7 @@
 package com.chouguting.mipsemulator.ui;
 
-import com.chouguting.mipsemulator.execution.Program;
+import com.chouguting.mipsemulator.exception.InstructionErrorException;
+import com.chouguting.mipsemulator.hardware.Mips;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -25,16 +26,16 @@ import java.nio.file.Path;
  */
 public class MainScreen extends JFrame implements ActionListener {
     JFileChooser fileChooser = new JFileChooser();
-    private JButton openFileButton = new JButton();
-    private JButton newFileButton = new JButton();
-    private JTextArea codingArea = new JTextArea();
-    private JButton saveFileButton = new JButton();
-    private JButton assembleButton = new JButton();
-    private JButton runButton = new JButton();
-    private JButton stepButton = new JButton();
+    private JButton openFileButton = new JButton(); //開啟舊檔
+    private JButton newFileButton = new JButton();  //新頁面的按鈕
+    private JTextArea codingArea = new JTextArea(); //程式編輯區
+    private JButton saveFileButton = new JButton();  //儲存檔案的按鈕
+    private JButton assembleButton = new JButton(); //編譯按鈕
+    private JButton runButton = new JButton(); //執行程式的按鈕
+    private JButton stepButton = new JButton(); //一步一步執行的按鈕
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
 
-    private Program myProgram;
+    private Mips myMIPSEmulator;
 
     public MainScreen() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -154,20 +155,28 @@ public class MainScreen extends JFrame implements ActionListener {
             if (answer == 0) codingArea.setText("");
         }
 
+        //處理組譯按鈕
         if (e.getSource() == assembleButton) {
             stepButton.setEnabled(true);
             scrollCodingPart.setBorder(new LineBorder(Color.CYAN, 5));
             scrollCodingPart.getVerticalScrollBar().setValue(0);
-            myProgram = new Program(codingArea.getText());
-            instructionUIHandler.paintLine(codingArea, myProgram.getCurrentInstructionLocation());
+            try {
+                myMIPSEmulator = new Mips(codingArea.getText()); //建立一個新的MIPS INSTANCE
+            } catch (InstructionErrorException instructionErrorException) {
+                JOptionPane.showMessageDialog(this, "組譯錯誤");
+            }
+            if (!codingArea.getText().endsWith("\\n")) codingArea.setText(codingArea.getText() + "\n");  //最後留一行空白行
+            instructionUIHandler.paintLine(codingArea, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
+
         }
 
         if (e.getSource() == stepButton) {
-            if (myProgram.isEnded()) {
-                instructionUIHandler.paintLine(codingArea, myProgram.getCurrentInstructionLocation() + 1);
-            } else {
-                myProgram.step();
-                instructionUIHandler.paintLine(codingArea, myProgram.getCurrentInstructionLocation());
+            if (myMIPSEmulator.getProgram().isEnded()) {  //如果程式已經跑完
+                //codingArea.getHighlighter().removeAllHighlights();
+                instructionUIHandler.paintLine(codingArea, myMIPSEmulator.getProgram().getCurrentInstructionLocation() + 1);
+            } else { //如果程式還沒跑完 就STEP下一步
+                myMIPSEmulator.getProgram().step();
+                instructionUIHandler.paintLine(codingArea, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
             }
         }
     }
