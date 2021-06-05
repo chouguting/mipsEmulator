@@ -12,19 +12,21 @@ import java.util.ArrayList;
  * Program:也就是用戶執行的程式整體
  */
 public class Program {
-    private ArrayList<Instruction> myInstructions;
     ArrayList<Label> labelList;
-
-    private int currentInstruction;
-    private boolean Ended;
     Mips source;
+    private ArrayList<Instruction> myInstructions;
+    private int currentInstruction;
+    private InstructionExecutor instructionExecutor;
+    private boolean Ended;
 
     public Program(Mips source) {
         this.source = source;
         labelList = new ArrayList<>();
         currentInstruction = 0;
+        instructionExecutor = new InstructionExecutor(source);
     }
 
+    //載入程式
     public void loadProgram(String allInstructionText) throws InstructionErrorException {
         myInstructions = InstructionHandler.stringToInstructions(source, allInstructionText);
         currentInstruction = 0;
@@ -37,11 +39,11 @@ public class Program {
 
     //跑下一行
     public void step() {
-        if (currentInstruction + 1 >= myInstructions.size()) {
+        if (instructionExecutor.executeInstruction(currentInstruction, myInstructions.get(currentInstruction)) >= myInstructions.size()) {
             Ended = true;
             return;
         }
-        currentInstruction += 1;
+        currentInstruction = instructionExecutor.executeInstruction(currentInstruction, myInstructions.get(currentInstruction));
     }
 
     public ArrayList<Label> getLabelList() {
@@ -50,6 +52,7 @@ public class Program {
 
     //取得現在要跑的程式在原先檔案的哪一行
     public int getCurrentInstructionLocation() {
+        if (myInstructions.size() == 0) return 0;
         return myInstructions.get(currentInstruction).getLocationInProgram();
     }
 

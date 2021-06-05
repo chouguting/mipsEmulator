@@ -7,7 +7,7 @@ import com.chouguting.mipsemulator.hardware.Register;
 import java.util.Arrays;
 
 public class OperandHandler {
-    public static Register stringToOperand(Mips source, String inputStr) throws InstructionErrorException {
+    public static Register stringToRegister(Mips source, String inputStr) throws InstructionErrorException {
         if (inputStr.startsWith("$")) inputStr = inputStr.substring(1);
         inputStr = inputStr.toLowerCase();
         if (!Arrays.asList(Register.registerList).contains(inputStr)) {

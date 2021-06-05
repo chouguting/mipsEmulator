@@ -6,26 +6,26 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import java.awt.*;
 
-public class instructionUIHandler {
+public class InstructionUIHandler {
     public static int nextstep(JTextArea codingArea, int currentProgramCounterLine) {
         int lastLine = currentProgramCounterLine;
         do {
             if (currentProgramCounterLine + 1 >= codingArea.getLineCount()) {
-                paintLine(codingArea, lastLine + 1);
+                paintLine(codingArea, Color.cyan, lastLine + 1);
                 return lastLine;
             }
             currentProgramCounterLine += 1;
         } while (isBlankLine(codingArea, currentProgramCounterLine));
 
-        paintLine(codingArea, currentProgramCounterLine);
+        paintLine(codingArea, Color.cyan, currentProgramCounterLine);
         return currentProgramCounterLine;
     }
 
-    public static void paintLine(JTextArea codingArea, int line) {
+    public static void paintLine(JTextArea codingArea, Color color, int line) {
         try {
             int startIndex = codingArea.getLineStartOffset(line);
             int endIndex = codingArea.getLineEndOffset(line);
-            Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.cyan);
+            Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(color);
             codingArea.getHighlighter().removeAllHighlights();
             codingArea.getHighlighter().addHighlight(startIndex, endIndex, painter);
         } catch (BadLocationException ble) {

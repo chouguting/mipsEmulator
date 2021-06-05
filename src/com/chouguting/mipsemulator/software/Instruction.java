@@ -2,7 +2,7 @@ package com.chouguting.mipsemulator.software;
 
 public class Instruction {
     private int locationInProgram;
-    private int opCode;
+    protected int opCode;
 
     public Instruction(int locationInProgram) {
         this.locationInProgram = locationInProgram;
