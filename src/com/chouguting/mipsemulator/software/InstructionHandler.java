@@ -345,8 +345,7 @@ public class InstructionHandler {
             }
         }
 
-
-        return resultInstruction;
+        throw new InstructionErrorException(location);
     }
 
 

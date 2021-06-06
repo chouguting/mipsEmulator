@@ -66,9 +66,9 @@ public class MainScreen extends JFrame implements ActionListener {
         saveFileButton.addActionListener(this);
 
 
-        assembleButton.setBounds(220,10,60,30);
+        assembleButton.setBounds(220, 10, 60, 30);
         assembleButton.setFocusable(false);
-        assembleButton.setFont(new Font("consolas",Font.BOLD,11));
+        assembleButton.setFont(new Font("consolas", Font.BOLD, 11));
         assembleButton.setText("ASEM");
         assembleButton.addActionListener(this);
 
@@ -85,7 +85,7 @@ public class MainScreen extends JFrame implements ActionListener {
         stepButton.addActionListener(this);
         stepButton.setEnabled(false);
 
-        codingArea.setFont(new Font("consolas", Font.PLAIN, 18));
+        codingArea.setFont(new Font("consolas", Font.PLAIN, 25));
         codingArea.setLineWrap(true);
         codingArea.addKeyListener(new KeyListener() {
             @Override
@@ -176,26 +176,28 @@ public class MainScreen extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "組譯錯誤");
                 return;
             }
+            refreshRegister();
             scrollCodingPart.setBorder(new LineBorder(Color.CYAN, 5));
             scrollCodingPart.getVerticalScrollBar().setValue(0);
-            if (!codingArea.getText().endsWith("\\n")) codingArea.setText(codingArea.getText() + "\n");  //最後留一行空白行
+            if (!codingArea.getText().endsWith("\n                "))
+                codingArea.setText(codingArea.getText() + "\n                ");  //最後留一行空白行
             InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
 
         }
 
         if (e.getSource() == stepButton) {
-            refreshRegister();
             if (myMIPSEmulator.getProgram().isEnded()) {  //如果程式已經跑完
-                //codingArea.getHighlighter().removeAllHighlights();
-                InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation() + 1);
+                codingArea.getHighlighter().removeAllHighlights();
+                //InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
             } else { //如果程式還沒跑完 就STEP下一步
                 myMIPSEmulator.getProgram().step();
                 if (myMIPSEmulator.getProgram().isEnded()) {
-                    InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation() + 1);
+                    InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
                 } else {
                     InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
                 }
             }
+            refreshRegister();
         }
     }
 

@@ -17,7 +17,6 @@ public class Program {
     private ArrayList<Instruction> myInstructions;
     private int currentInstruction;
     private InstructionExecutor instructionExecutor;
-    private boolean Ended;
 
     public Program(Mips source) {
         this.source = source;
@@ -30,19 +29,10 @@ public class Program {
     public void loadProgram(String allInstructionText) throws InstructionErrorException {
         myInstructions = InstructionHandler.stringToInstructions(source, allInstructionText);
         currentInstruction = 0;
-        if (currentInstruction + 1 >= myInstructions.size()) {
-            Ended = true;
-        } else {
-            Ended = false;
-        }
     }
 
     //跑下一行
     public void step() {
-        if (instructionExecutor.executeInstruction(currentInstruction, myInstructions.get(currentInstruction)) >= myInstructions.size()) {
-            Ended = true;
-            return;
-        }
         currentInstruction = instructionExecutor.executeInstruction(currentInstruction, myInstructions.get(currentInstruction));
     }
 
@@ -53,11 +43,16 @@ public class Program {
     //取得現在要跑的程式在原先檔案的哪一行
     public int getCurrentInstructionLocation() {
         if (myInstructions.size() == 0) return 0;
+        if(isEnded())return myInstructions.get(myInstructions.size()-1).getLocationInProgram()+1; //如果程式已經結束 就跑到所有程式碼後的下一行
         return myInstructions.get(currentInstruction).getLocationInProgram();
     }
 
     //程式是否已經結束
     public boolean isEnded() {
-        return Ended;
+        if(currentInstruction  >= myInstructions.size()){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

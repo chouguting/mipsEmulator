@@ -11,4 +11,8 @@ public class Instruction {
     public int getLocationInProgram() {
         return locationInProgram;
     }
+
+    public int getOpCode() {
+        return opCode;
+    }
 }

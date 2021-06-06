@@ -24,4 +24,15 @@ public class ITypeInstruction extends Instruction {
         this.immOperand = immField;
     }
 
+    public Operand getRsOperand() {
+        return rsOperand;
+    }
+
+    public Operand getRtOperand() {
+        return rtOperand;
+    }
+
+    public Operand getImmOperand() {
+        return immOperand;
+    }
 }

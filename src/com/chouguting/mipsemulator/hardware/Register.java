@@ -54,11 +54,11 @@ public class Register implements Operand {
 
     @Override
     public int getData() {
-        return 0;
+        return storedValue;
     }
 
     @Override
     public void setData(int inputData) {
-
+            storedValue=inputData;
     }
 }

@@ -49,4 +49,23 @@ public class RTypeInstruction extends Instruction {
         this.rtOperand = oprRT;
     }
 
+    public int getFuncCode() {
+        return funcCode;
+    }
+
+    public Operand getRsOperand() {
+        return rsOperand;
+    }
+
+    public Operand getRtOperand() {
+        return rtOperand;
+    }
+
+    public Operand getRdOperand() {
+        return rdOperand;
+    }
+
+    public int getShamt() {
+        return shamt;
+    }
 }
