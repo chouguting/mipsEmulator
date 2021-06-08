@@ -22,13 +22,13 @@ public class RegisterPanel extends JPanel {
             RegisterView[i].setBackground(Color.WHITE);
             RegisterView[i].setFont(new Font("Consolas", Font.PLAIN, 15));
             JLabel singleRegisterLabel = new JLabel();
-            singleRegisterLabel.setText(String.format("%4s", Register.registerList[i]));
-            singleRegisterLabel.setFont(new Font("Consolas", Font.PLAIN, 15));
-            JPanel singleRegisterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            singleRegisterLabel.setText(String.format("%4s ", Register.registerList[i]));
+            singleRegisterLabel.setFont(new Font("Consolas", Font.BOLD, 17));
+            JPanel singleRegisterPanel = new JPanel(new BorderLayout());
 
             //singleRegisterPanel.setPreferredSize(new Dimension(15,30));
-            singleRegisterPanel.add(singleRegisterLabel);
-            singleRegisterPanel.add(RegisterView[i]);
+            singleRegisterPanel.add(singleRegisterLabel, BorderLayout.WEST);
+            singleRegisterPanel.add(RegisterView[i], BorderLayout.CENTER);
             this.add(singleRegisterPanel);
         }
 
