@@ -46,19 +46,19 @@ public class Register implements Operand {
     public static final int FP = 30;
     public static final int RA = 31;
 
-    private int storedValue;
+    private long storedValue;
 
-    public Register(int storedValue) {
+    public Register(long storedValue) {
         this.storedValue = storedValue;
     }
 
     @Override
-    public int getData() {
+    public long getData() {
         return storedValue;
     }
 
     @Override
-    public void setData(int inputData) {
-            storedValue=inputData;
+    public void setData(long inputData) {
+        storedValue = inputData;
     }
 }

@@ -4,13 +4,13 @@ package com.chouguting.mipsemulator.exception;
  */
 public class InstructionErrorException extends Exception {
     boolean traceable;
-    int errorLocation;
+    long errorLocation;
 
     public InstructionErrorException() {
         traceable = false;
     }
 
-    public InstructionErrorException(int errorLocation) {
+    public InstructionErrorException(long errorLocation) {
         traceable = true;
         this.errorLocation = errorLocation;
     }
@@ -19,7 +19,7 @@ public class InstructionErrorException extends Exception {
         return traceable;
     }
 
-    public int getErrorLocation() {
+    public long getErrorLocation() {
         return errorLocation;
     }
 }

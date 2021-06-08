@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 public class Label extends Instruction implements Operand {
 
-    private int location; //記錄自己在第幾行
+    private long location; //記錄自己在第幾行
     String name;
     private int nextExecutionIndex; //紀錄這個LABEL的下一行指令是指令庫中的第幾個
 
     //跑到這個CONSTRUCTOR代表這個LABEL是真正的標籤
-    public Label(int locationInProgram, ArrayList<Label> labelList, String name, int nextExecutionIndex) throws InstructionErrorException {
+    public Label(long locationInProgram, ArrayList<Label> labelList, String name, int nextExecutionIndex) throws InstructionErrorException {
         super(locationInProgram);
         location = locationInProgram;
         boolean notFound = true;
@@ -46,12 +46,12 @@ public class Label extends Instruction implements Operand {
     }
 
     @Override
-    public int getData() {
+    public long getData() {
         return location;
     }
 
     @Override
-    public void setData(int inputData) {
+    public void setData(long inputData) {
         location = inputData;
     }
 }

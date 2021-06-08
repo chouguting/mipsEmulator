@@ -15,7 +15,7 @@ public class Program {
     ArrayList<Label> labelList;
     Mips source;
     private ArrayList<Instruction> myInstructions;
-    private int currentInstruction;
+    private long currentInstruction;
     private InstructionExecutor instructionExecutor;
 
     public Program(Mips source) {
@@ -33,7 +33,7 @@ public class Program {
 
     //跑下一行
     public void step() {
-        currentInstruction = instructionExecutor.executeInstruction(currentInstruction, myInstructions.get(currentInstruction));
+        currentInstruction = instructionExecutor.executeInstruction(currentInstruction, myInstructions.get((int) currentInstruction));
     }
 
     public ArrayList<Label> getLabelList() {
@@ -41,10 +41,11 @@ public class Program {
     }
 
     //取得現在要跑的程式在原先檔案的哪一行
-    public int getCurrentInstructionLocation() {
+    public long getCurrentInstructionLocation() {
         if (myInstructions.size() == 0) return 0;
-        if(isEnded())return myInstructions.get(myInstructions.size()-1).getLocationInProgram()+1; //如果程式已經結束 就跑到所有程式碼後的下一行
-        return myInstructions.get(currentInstruction).getLocationInProgram();
+        if (isEnded())
+            return myInstructions.get(myInstructions.size() - 1).getLocationInProgram() + 1; //如果程式已經結束 就跑到所有程式碼後的下一行
+        return myInstructions.get((int) currentInstruction).getLocationInProgram();
     }
 
     //程式是否已經結束

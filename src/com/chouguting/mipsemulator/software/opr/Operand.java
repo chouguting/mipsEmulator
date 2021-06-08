@@ -1,9 +1,9 @@
 package com.chouguting.mipsemulator.software.opr;
 
 public interface Operand {
-    int getData();
+    long getData();
 
-    void setData(int inputData);
+    void setData(long inputData);
 
 
 }

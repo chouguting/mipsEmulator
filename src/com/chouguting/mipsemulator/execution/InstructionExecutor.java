@@ -16,8 +16,8 @@ public class InstructionExecutor {
         this.source = source;
     }
 
-    int getNextExecutionPoint(int currentIndex, Instruction instruction){
-        int nextIndex = currentIndex + 1;
+    long getNextExecutionPoint(int currentIndex, Instruction instruction) {
+        long nextIndex = currentIndex + 1;
         if (instruction.getClass() == JTypeInstruction.class) {
             JTypeInstruction jTypeInstruction = (JTypeInstruction) instruction;
             nextIndex = jTypeInstruction.getLabel().getData();
@@ -27,12 +27,12 @@ public class InstructionExecutor {
 
     //執行指令
     //會回傳下一步要跑指令庫中的第幾個
-    int executeInstruction(int currentIndex, Instruction instruction) {
-        int nextIndex = currentIndex + 1;
+    long executeInstruction(long currentIndex, Instruction instruction) {
+        long nextIndex = currentIndex + 1;
         if (instruction.getClass() == JTypeInstruction.class) {
             JTypeInstruction jTypeInstruction = (JTypeInstruction) instruction;
             nextIndex = jTypeInstruction.getLabel().getData();
-        }else if (instruction.getClass() == RTypeInstruction.class) {
+        } else if (instruction.getClass() == RTypeInstruction.class) {
             rTypeFetcher((RTypeInstruction) instruction);
         } else if (instruction.getClass() == ITypeInstruction.class) {
             if (instruction.getOpCode() == ITypeInstruction.BEQop || instruction.getOpCode() == ITypeInstruction.BNEop) {
@@ -95,26 +95,26 @@ public class InstructionExecutor {
     //專門處理 Itype指令
     void iTypeFetcher(ITypeInstruction instruction) {
         if (instruction.getOpCode() == ITypeInstruction.ADDIop) {
-            int rsData = instruction.getRsOperand().getData();
-            int immediate = instruction.getImmOperand().getData();
+            long rsData = instruction.getRsOperand().getData();
+            long immediate = instruction.getImmOperand().getData();
             instruction.getRtOperand().setData(rsData + immediate);
         }
 
         if (instruction.getOpCode() == ITypeInstruction.ANDIop) {
-            int rsData = instruction.getRsOperand().getData();
-            int immediate = instruction.getImmOperand().getData();
+            long rsData = instruction.getRsOperand().getData();
+            long immediate = instruction.getImmOperand().getData();
             instruction.getRtOperand().setData(rsData & immediate);
         }
 
         if (instruction.getOpCode() == ITypeInstruction.ORIop) {
-            int rsData = instruction.getRsOperand().getData();
-            int immediate = instruction.getImmOperand().getData();
+            long rsData = instruction.getRsOperand().getData();
+            long immediate = instruction.getImmOperand().getData();
             instruction.getRtOperand().setData(rsData | immediate);
         }
 
         if (instruction.getOpCode() == ITypeInstruction.SLTIop) {
-            int rsData = instruction.getRsOperand().getData();
-            int immediate = instruction.getImmOperand().getData();
+            long rsData = instruction.getRsOperand().getData();
+            long immediate = instruction.getImmOperand().getData();
             if (rsData < immediate) {
                 instruction.getRtOperand().setData(1);
             } else {
@@ -132,8 +132,8 @@ public class InstructionExecutor {
     }
 
     //處理分支類的指令 (也屬於IType)
-    int branchFetcher(int currentIndex, ITypeInstruction instruction) {
-        int nextIndex = currentIndex + 1;
+    long branchFetcher(long currentIndex, ITypeInstruction instruction) {
+        long nextIndex = currentIndex + 1;
         if (instruction.getOpCode() == ITypeInstruction.BEQop) {
             if (instruction.getRsOperand().getData() == instruction.getRtOperand().getData()) {
                 nextIndex = instruction.getImmOperand().getData();

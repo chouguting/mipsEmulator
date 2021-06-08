@@ -2,7 +2,6 @@ package com.chouguting.mipsemulator.ui;
 
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
 import com.chouguting.mipsemulator.hardware.Mips;
-import com.chouguting.mipsemulator.hardware.Register;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -25,7 +24,7 @@ import java.nio.file.Path;
  * 包含五個功能按鈕(新檔案、存檔、載入檔案、編譯、執行、逐行跑)
  * 寫好的程式會變成一個Program物件
  */
-public class MainScreen extends JFrame implements ActionListener {
+public class HDMainScreenPanel extends JPanel implements ActionListener {
     JFileChooser fileChooser = new JFileChooser();
     private JButton openFileButton = new JButton(); //開啟舊檔
     private JButton newFileButton = new JButton();  //新頁面的按鈕
@@ -37,15 +36,16 @@ public class MainScreen extends JFrame implements ActionListener {
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
 
     private RegisterPanel registerPanel = new RegisterPanel();
+    MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
     private Mips myMIPSEmulator;
 
-    public MainScreen() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public HDMainScreenPanel() {
+        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1280, 720);
 
         this.setLayout(null);
-        this.setResizable(false);
-        this.setTitle("MIPS emulator");
+        //this.setResizable(false);
+        //this.setTitle("MIPS emulator");
 
         newFileButton.setBounds(10, 10, 60, 30);
         newFileButton.setFocusable(false);
@@ -87,10 +87,12 @@ public class MainScreen extends JFrame implements ActionListener {
 
         codingArea.setFont(new Font("consolas", Font.PLAIN, 25));
         codingArea.setLineWrap(true);
-        codingArea.addKeyListener(new KeyListener() {
+        codingArea.addKeyListener(new KeyListener() {   //當編輯區域有改變文字時
             @Override
             public void keyTyped(KeyEvent e) {
                 stepButton.setEnabled(false);
+                memorySearchPanel.getMemSearchButton().setEnabled(false);
+                memorySearchPanel.getWordSearchButton().setEnabled(false);
                 scrollCodingPart.setBorder(null);
                 codingArea.getHighlighter().removeAllHighlights();
             }
@@ -107,7 +109,30 @@ public class MainScreen extends JFrame implements ActionListener {
         });
 
         scrollCodingPart.setBounds(10, 50, 410, this.getHeight() - 100);
-        registerPanel.setLocation(1060, 0);
+
+        //暫存器顯示數值區域
+        registerPanel.setLocation(this.getWidth() - 270, 5);
+
+
+        //5 stage pipeline顯示區域
+        JPanel fiveStageArea = new JPanel();
+        fiveStageArea.setBackground(Color.GREEN);
+        fiveStageArea.setBounds(425, 10, 585, 300);
+        this.add(fiveStageArea);
+
+        //5 stage pipeline顯示區域
+        JPanel circuitArea = new JPanel();
+        circuitArea.setBackground(Color.ORANGE);
+        circuitArea.setBounds(425, 315, 585, 355);
+        this.add(circuitArea);
+
+        //內存搜尋區域
+        memorySearchPanel.getMemSearchButton().addActionListener(this);
+        memorySearchPanel.getWordSearchButton().addActionListener(this);
+        memorySearchPanel.setBounds(this.getWidth() - 265, 460, 245, 210);
+        this.add(memorySearchPanel);
+
+
         this.add(scrollCodingPart);
         this.add(openFileButton);
         this.add(newFileButton);
@@ -117,12 +142,6 @@ public class MainScreen extends JFrame implements ActionListener {
         this.add(stepButton);
         this.add(registerPanel);
         this.setVisible(true);
-    }
-
-    void refreshRegister() {
-        for (int i = 0; i < Register.REGISTER_COUNT; i++) {
-            registerPanel.getRegisterView(i).setText(Integer.toString(myMIPSEmulator.getRegister(i).getData()));
-        }
     }
 
     @Override
@@ -166,22 +185,27 @@ public class MainScreen extends JFrame implements ActionListener {
 
         //處理組譯按鈕
         if (e.getSource() == assembleButton) {
-            stepButton.setEnabled(true);
-
             try {
                 myMIPSEmulator = new Mips(codingArea.getText()); //建立一個新的MIPS INSTANCE
             } catch (InstructionErrorException instructionErrorException) { //如果組譯過程中有錯
                 if (instructionErrorException.isTraceable())
-                    InstructionUIHandler.paintLine(codingArea, Color.red, instructionErrorException.getErrorLocation());
+                    InstructionUIHandler.paintLine(codingArea, Color.red, (int) instructionErrorException.getErrorLocation());
                 JOptionPane.showMessageDialog(this, "組譯錯誤");
                 return;
             }
-            refreshRegister();
+            registerPanel.refreshRegister(myMIPSEmulator);
+            stepButton.setEnabled(true);
+
+            //內存搜尋區域重置
+            memorySearchPanel.getMemSearchButton().setEnabled(true);
+            memorySearchPanel.getWordSearchButton().setEnabled(true);
+            memorySearchPanel.getSearchIndexTextField().setText("0");
+            memorySearchPanel.updateTable(myMIPSEmulator.getMemory());
             scrollCodingPart.setBorder(new LineBorder(Color.CYAN, 5));
             scrollCodingPart.getVerticalScrollBar().setValue(0);
             if (!codingArea.getText().endsWith("\n                "))
                 codingArea.setText(codingArea.getText() + "\n                ");  //最後留一行空白行
-            InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
+            InstructionUIHandler.paintLine(codingArea, Color.cyan, (int) myMIPSEmulator.getProgram().getCurrentInstructionLocation());
 
         }
 
@@ -192,12 +216,31 @@ public class MainScreen extends JFrame implements ActionListener {
             } else { //如果程式還沒跑完 就STEP下一步
                 myMIPSEmulator.getProgram().step();
                 if (myMIPSEmulator.getProgram().isEnded()) {
-                    InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
+                    InstructionUIHandler.paintLine(codingArea, Color.cyan, (int) myMIPSEmulator.getProgram().getCurrentInstructionLocation());
                 } else {
-                    InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
+                    InstructionUIHandler.paintLine(codingArea, Color.cyan, (int) myMIPSEmulator.getProgram().getCurrentInstructionLocation());
                 }
             }
-            refreshRegister();
+            memorySearchPanel.updateTable(myMIPSEmulator.getMemory());
+            registerPanel.refreshRegister(myMIPSEmulator);
+        }
+
+        //處理搜尋內存的事件 單純搜尋Address
+        if (e.getSource() == memorySearchPanel.getMemSearchButton()) {
+            memorySearchPanel.setDisplayMode(MemorySearchPanel.MOMERY_ADDRESS_MODE);
+            memorySearchPanel.setCurrentSearchIndex(Integer.parseInt(memorySearchPanel.getSearchIndexTextField().getText())); //先設定要搜尋的位置
+            memorySearchPanel.updateTable(myMIPSEmulator.getMemory());  //更新畫面
+        }
+
+        //處理搜尋內存的事件 以WORD為單位
+        if (e.getSource() == memorySearchPanel.getWordSearchButton()) {
+            if (Long.parseLong(memorySearchPanel.getSearchIndexTextField().getText()) % 4 != 0) {
+                JOptionPane.showMessageDialog(this, "請輸入4的倍數");
+                return;
+            }
+            memorySearchPanel.setDisplayMode(MemorySearchPanel.DISPLAY_WORD_MODE);
+            memorySearchPanel.setCurrentSearchIndex(Integer.parseInt(memorySearchPanel.getSearchIndexTextField().getText())); //先設定要搜尋的位置
+            memorySearchPanel.updateTable(myMIPSEmulator.getMemory());  //更新畫面
         }
     }
 

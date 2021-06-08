@@ -1,19 +1,19 @@
 package com.chouguting.mipsemulator.software.opr;
 
 public class Immediate implements Operand {
-    private int immediateData;
+    private long immediateData;
 
-    public Immediate(int immediateData) {
+    public Immediate(long immediateData) {
         this.immediateData = immediateData;
     }
 
     @Override
-    public int getData() {
+    public long getData() {
         return immediateData;
     }
 
     @Override
-    public void setData(int inputData) {
+    public void setData(long inputData) {
         immediateData = inputData;
     }
 }

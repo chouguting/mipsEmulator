@@ -216,7 +216,7 @@ public class InstructionHandler {
                 addFrom1 = addFrom1.replaceAll("\\s+", "").toLowerCase();
                 String addFrom2 = buff[2];
                 addFrom2 = addFrom2.replaceAll("\\s+", "");
-                int addFromImmediate = Integer.parseInt(addFrom2);
+                long addFromImmediate = Integer.parseInt(addFrom2);
                 return new ITypeInstruction(location, ITypeInstruction.ADDIop, OperandHandler.stringToRegister(source, addFrom1)
                         , OperandHandler.stringToRegister(source, addTo), new Immediate(addFromImmediate));
             } catch (Exception e) {
@@ -269,7 +269,7 @@ public class InstructionHandler {
                 andFrom1 = andFrom1.replaceAll("\\s+", "").toLowerCase();
                 String andFrom2 = buff[2];
                 andFrom2 = andFrom2.replaceAll("\\s+", "");
-                int andFromImmediate = Integer.parseInt(andFrom2);
+                long andFromImmediate = Integer.parseInt(andFrom2);
                 return new ITypeInstruction(location, ITypeInstruction.ANDIop, OperandHandler.stringToRegister(source, andFrom1)
                         , OperandHandler.stringToRegister(source, andTo), new Immediate(andFromImmediate));
             } catch (Exception e) {
@@ -286,7 +286,7 @@ public class InstructionHandler {
                 orFrom1 = orFrom1.replaceAll("\\s+", "").toLowerCase();
                 String orFrom2 = buff[2];
                 orFrom2 = orFrom2.replaceAll("\\s+", "");
-                int orFromImmediate = Integer.parseInt(orFrom2);
+                long orFromImmediate = Integer.parseInt(orFrom2);
                 return new ITypeInstruction(location, ITypeInstruction.ORIop, OperandHandler.stringToRegister(source, orFrom1)
                         , OperandHandler.stringToRegister(source, orTo), new Immediate(orFromImmediate));
             } catch (Exception e) {
@@ -337,7 +337,7 @@ public class InstructionHandler {
                 compareFrom1 = compareFrom1.replaceAll("\\s+", "").toLowerCase();
                 String compareTo = buff[2];
                 compareTo = compareTo.replaceAll("\\s+", "");
-                int orFromImmediate = Integer.parseInt(compareTo);
+                long orFromImmediate = Integer.parseInt(compareTo);
                 return new ITypeInstruction(location, ITypeInstruction.SLTIop, OperandHandler.stringToRegister(source, compareFrom1)
                         , OperandHandler.stringToRegister(source, resultTo), new Immediate(orFromImmediate));
             } catch (Exception e) {

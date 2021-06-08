@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mipsEmulator:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/mipsEmulator_jar</output-path>
+    <root id="archive" name="mipsEmulator.jar">
+      <element id="module-output" name="mipsEmulator" />
+    </root>
+  </artifact>
+</component>

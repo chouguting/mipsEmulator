@@ -10,12 +10,12 @@ public class RegisterLocation implements Operand {
     }
 
     @Override
-    public int getData() {
+    public long getData() {
         return 0;
     }
 
     @Override
-    public void setData(int inputData) {
+    public void setData(long inputData) {
 
     }
 
