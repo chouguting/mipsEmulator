@@ -232,10 +232,10 @@ public class InstructionHandler {
                 String[] offsetAndBase = buff[1].split("\\(", 2);
                 int offset = Integer.parseInt(offsetAndBase[0].replaceAll("\\s+", "")); //把offset取出
                 String[] baseTemp = offsetAndBase[1].split("\\)");
-                String base = baseTemp[0].replaceAll("\\s+", "").toLowerCase();
+                String base = baseTemp[0].replaceAll("\\s+", "").toLowerCase(); //剩下的這個Register是BASE
 
                 return new ITypeInstruction(location, ITypeInstruction.LWop, OperandHandler.stringToRegister(source, base)
-                        , OperandHandler.stringToRegister(source, saveTo), new MemoryLocation(OperandHandler.stringToRegister(source, base), offset));
+                        , OperandHandler.stringToRegister(source, saveTo), new MemoryLocation(source.getMemory(), OperandHandler.stringToRegister(source, base), offset));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
             }
@@ -254,7 +254,7 @@ public class InstructionHandler {
                 String base = baseTemp[0].replaceAll("\\s+", "").toLowerCase();
 
                 return new ITypeInstruction(location, ITypeInstruction.SWop, OperandHandler.stringToRegister(source, base)
-                        , OperandHandler.stringToRegister(source, saveFrom), new MemoryLocation(OperandHandler.stringToRegister(source, base), offset));
+                        , OperandHandler.stringToRegister(source, saveFrom), new MemoryLocation(source.getMemory(), OperandHandler.stringToRegister(source, base), offset));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
             }

@@ -30,4 +30,8 @@ public class Mips {
     public Register getRegister(int index) {
         return registers[index];
     }
+
+    public Memory getMemory() {
+        return memory;
+    }
 }

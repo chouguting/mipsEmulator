@@ -32,10 +32,14 @@ public class InstructionExecutor {
         if (instruction.getClass() == JTypeInstruction.class) {
             JTypeInstruction jTypeInstruction = (JTypeInstruction) instruction;
             nextIndex = jTypeInstruction.getLabel().getData();
-        }else if(instruction.getClass()== RTypeInstruction.class){
+        }else if (instruction.getClass() == RTypeInstruction.class) {
             rTypeFetcher((RTypeInstruction) instruction);
-        }else if(instruction.getClass()== ITypeInstruction.class){
-            iTypeFetcher((ITypeInstruction) instruction);
+        } else if (instruction.getClass() == ITypeInstruction.class) {
+            if (instruction.getOpCode() == ITypeInstruction.BEQop || instruction.getOpCode() == ITypeInstruction.BNEop) {
+                nextIndex = branchFetcher(currentIndex, (ITypeInstruction) instruction);
+            } else {
+                iTypeFetcher((ITypeInstruction) instruction);
+            }
         }
         return nextIndex;
     }
@@ -89,14 +93,58 @@ public class InstructionExecutor {
 
 
     //專門處理 Itype指令
-    void iTypeFetcher(ITypeInstruction instruction){
-        if(instruction.getOpCode()==ITypeInstruction.ADDIop){
-            int rsData=instruction.getRsOperand().getData();
-            int immediate=instruction.getImmOperand().getData();
-            int rtData=instruction.getRtOperand().getData();
-            instruction.getRtOperand().setData(rsData+immediate);
+    void iTypeFetcher(ITypeInstruction instruction) {
+        if (instruction.getOpCode() == ITypeInstruction.ADDIop) {
+            int rsData = instruction.getRsOperand().getData();
+            int immediate = instruction.getImmOperand().getData();
+            instruction.getRtOperand().setData(rsData + immediate);
+        }
+
+        if (instruction.getOpCode() == ITypeInstruction.ANDIop) {
+            int rsData = instruction.getRsOperand().getData();
+            int immediate = instruction.getImmOperand().getData();
+            instruction.getRtOperand().setData(rsData & immediate);
+        }
+
+        if (instruction.getOpCode() == ITypeInstruction.ORIop) {
+            int rsData = instruction.getRsOperand().getData();
+            int immediate = instruction.getImmOperand().getData();
+            instruction.getRtOperand().setData(rsData | immediate);
+        }
+
+        if (instruction.getOpCode() == ITypeInstruction.SLTIop) {
+            int rsData = instruction.getRsOperand().getData();
+            int immediate = instruction.getImmOperand().getData();
+            if (rsData < immediate) {
+                instruction.getRtOperand().setData(1);
+            } else {
+                instruction.getRtOperand().setData(0);
+            }
+        }
+
+        if (instruction.getOpCode() == ITypeInstruction.LWop) {
+            instruction.getRtOperand().setData(instruction.getImmOperand().getData());
+        }
+
+        if (instruction.getOpCode() == ITypeInstruction.SWop) {
+            instruction.getImmOperand().setData(instruction.getRtOperand().getData());
         }
     }
 
+    //處理分支類的指令 (也屬於IType)
+    int branchFetcher(int currentIndex, ITypeInstruction instruction) {
+        int nextIndex = currentIndex + 1;
+        if (instruction.getOpCode() == ITypeInstruction.BEQop) {
+            if (instruction.getRsOperand().getData() == instruction.getRtOperand().getData()) {
+                nextIndex = instruction.getImmOperand().getData();
+            }
+        }
 
+        if (instruction.getOpCode() == ITypeInstruction.BNEop) {
+            if (instruction.getRsOperand().getData() != instruction.getRtOperand().getData()) {
+                nextIndex = instruction.getImmOperand().getData();
+            }
+        }
+        return nextIndex;
+    }
 }
