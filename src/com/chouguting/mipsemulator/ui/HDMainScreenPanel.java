@@ -3,14 +3,12 @@ package com.chouguting.mipsemulator.ui;
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
 import com.chouguting.mipsemulator.hardware.MipsWithPipeline;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,8 +24,8 @@ import java.nio.file.Path;
  */
 public class HDMainScreenPanel extends JPanel implements ActionListener {
     JFileChooser fileChooser = new JFileChooser();
-    private JButton openFileButton = new JButton(); //開啟舊檔
-    private JButton newFileButton = new JButton();  //新頁面的按鈕
+    private JButton openFileButton=new JButton(); //開啟舊檔
+    private JButton newFileButton;  //新頁面的按鈕
     private JTextArea codingArea = new JTextArea(); //程式編輯區
     private JButton saveFileButton = new JButton();  //儲存檔案的按鈕
     private JButton assembleButton = new JButton(); //編譯按鈕
@@ -35,12 +33,14 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private JButton stepButton = new JButton(); //一步一步執行的按鈕
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
 
+    private ImageIcon newButtonNormalImage;
+    private ImageIcon newButtonFocusImage;
 
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
     PipelinedCircuitPanel pipeliningArea = new PipelinedCircuitPanel();
     SingleCycleCircuitPanel singleCycleCircuitArea = new SingleCycleCircuitPanel();
-    ;
+
     private MipsWithPipeline myMIPSEmulator;
 
     public HDMainScreenPanel() {
@@ -51,11 +51,35 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         //this.setResizable(false);
         //this.setTitle("MIPS emulator");
 
-        newFileButton.setBounds(10, 10, 60, 30);
+
+        try {
+            newButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonNormal.png")));
+            newButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonFocus.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        newFileButton.setBorderPainted(false);
+        newFileButton.setContentAreaFilled(false);
+        newFileButton.setFocusPainted(false);
+        newFileButton=new JButton(newButtonNormalImage);
+        newFileButton.setBounds(10, 10, 45, 45);
         newFileButton.setFocusable(false);
         newFileButton.setFont(new Font("consolas", Font.BOLD, 11));
-        newFileButton.setText("NEW");
         newFileButton.addActionListener(this);
+        newFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                newFileButton.setIcon(newButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                newFileButton.setIcon(newButtonNormalImage);
+            }
+        });
 
         openFileButton.setBounds(80, 10, 60, 30);
         openFileButton.setFocusable(false);
