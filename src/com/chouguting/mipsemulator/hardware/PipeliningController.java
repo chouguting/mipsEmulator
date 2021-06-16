@@ -1,10 +1,7 @@
 package com.chouguting.mipsemulator.hardware;
 
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
-import com.chouguting.mipsemulator.software.ITypeInstruction;
 import com.chouguting.mipsemulator.software.Instruction;
-import com.chouguting.mipsemulator.software.RTypeInstruction;
-import com.chouguting.mipsemulator.software.opr.Operand;
 
 /**
  * 處理Pipeline的內容及控制
@@ -17,11 +14,13 @@ public class PipeliningController {
     public static int MEM_STAGE = 3;
     public static int WB_STAGE = 4;
     Mips parallelRunner;
+    private ForwardingUnit forwardingUnit = new ForwardingUnit();
     Instruction ifStage = null;
     Instruction idStage = null;
     Instruction exStage = null;
     Instruction memStage = null;
     Instruction wbStage = null;
+
 
 
     public PipeliningController(String programString) {
@@ -106,78 +105,51 @@ public class PipeliningController {
         return str;
     }
 
+    //取得現在正在五階流水線的指令字串
+    public Instruction[] getCurrentInstructions() {
+        Instruction[] instructions = new Instruction[5];
+        if (ifStage == null) {
+            instructions[IF_STAGE] = null;
+        } else {
+            instructions[IF_STAGE] = ifStage;
+        }
+
+        if (idStage == null) {
+            instructions[ID_STAGE] = null;
+        } else {
+            instructions[ID_STAGE] = idStage;
+        }
+
+        if (exStage == null) {
+            instructions[EX_STAGE] = null;
+        } else {
+            instructions[EX_STAGE] = exStage;
+        }
+
+        if (memStage == null) {
+            instructions[MEM_STAGE] = null;
+        } else {
+            instructions[MEM_STAGE] = memStage;
+        }
+
+        if (wbStage == null) {
+            instructions[WB_STAGE] = null;
+        } else {
+            instructions[WB_STAGE] = wbStage;
+        }
+        return instructions;
+    }
+
+    //HazardDecection
+
     //判斷需不需要前饋
     public boolean exMemForwarding() {
-        if (exStage == null || memStage == null) return false;
-        if (memStage.getClass() == RTypeInstruction.class) {
-            if (exStage.getClass() == RTypeInstruction.class) {
-                if (((RTypeInstruction) memStage).getRdOperand() == ((RTypeInstruction) exStage).getRsOperand() ||
-                        ((RTypeInstruction) memStage).getRdOperand() == ((RTypeInstruction) exStage).getRtOperand()) {
-                    return true;
-                }
-            }
-            if (exStage.getClass() == ITypeInstruction.class) {
-                if (((RTypeInstruction) memStage).getRdOperand() == ((ITypeInstruction) exStage).getRsOperand()) {
-                    return true;
-                }
-            }
-        }
-        if (memStage.getClass() == ITypeInstruction.class) {
-            if (exStage.getClass() == RTypeInstruction.class) {
-                if (((ITypeInstruction) memStage).getRtOperand() == ((RTypeInstruction) exStage).getRsOperand() ||
-                        ((ITypeInstruction) memStage).getRtOperand() == ((RTypeInstruction) exStage).getRtOperand()) {
-                    return true;
-                }
-            }
-            if (exStage.getClass() == ITypeInstruction.class) {
-                if (((ITypeInstruction) memStage).getRtOperand() == ((ITypeInstruction) exStage).getRsOperand()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return forwardingUnit.exMemForwarding(exStage, memStage);
     }
 
     //判斷需不需要前饋
     public boolean memWbForwarding() {
-        if (exStage == null || wbStage == null) return false;
-
-        //捼果前面那一層已經前饋一樣的東西 這邊就不用了
-        Operand memRdOperand = null;
-        if (memStage.getClass() == RTypeInstruction.class) {
-            memRdOperand = ((RTypeInstruction) memStage).getRdOperand();
-        } else if (memStage.getClass() == ITypeInstruction.class) {
-            memRdOperand = ((ITypeInstruction) memStage).getRtOperand();
-        }
-        if (wbStage.getClass() == RTypeInstruction.class) {
-            if (((RTypeInstruction) wbStage).getRdOperand() == memRdOperand) return false;
-            if (exStage.getClass() == RTypeInstruction.class) {
-                if (((RTypeInstruction) wbStage).getRdOperand() == ((RTypeInstruction) exStage).getRsOperand() ||
-                        ((RTypeInstruction) wbStage).getRdOperand() == ((RTypeInstruction) exStage).getRtOperand()) {
-                    return true;
-                }
-            }
-            if (exStage.getClass() == ITypeInstruction.class) {
-                if (((RTypeInstruction) wbStage).getRdOperand() == ((ITypeInstruction) exStage).getRsOperand()) {
-                    return true;
-                }
-            }
-        }
-        if (wbStage.getClass() == ITypeInstruction.class) {
-            if (((ITypeInstruction) wbStage).getRtOperand() == memRdOperand) return false;
-            if (exStage.getClass() == RTypeInstruction.class) {
-                if (((ITypeInstruction) wbStage).getRtOperand() == ((RTypeInstruction) exStage).getRsOperand() ||
-                        ((ITypeInstruction) wbStage).getRtOperand() == ((RTypeInstruction) exStage).getRtOperand()) {
-                    return true;
-                }
-            }
-            if (exStage.getClass() == ITypeInstruction.class) {
-                if (((ITypeInstruction) wbStage).getRtOperand() == ((ITypeInstruction) exStage).getRsOperand()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return forwardingUnit.memWbForwarding(exStage, memStage, wbStage);
     }
 
 

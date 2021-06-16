@@ -196,6 +196,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             }
             registerPanel.refreshRegister(myMIPSEmulator);
             pipeliningArea.updateLabel(myMIPSEmulator.getPipeliningController());
+            singleCycleCircuitArea.update(myMIPSEmulator.getPipeliningController());
             stepButton.setEnabled(true);
 
             //內存搜尋區域重置
@@ -226,6 +227,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             }
             memorySearchPanel.updateTable(myMIPSEmulator.getMemory());
             pipeliningArea.updateLabel(myMIPSEmulator.getPipeliningController());
+            singleCycleCircuitArea.update(myMIPSEmulator.getPipeliningController());
             registerPanel.refreshRegister(myMIPSEmulator);
         }
 
