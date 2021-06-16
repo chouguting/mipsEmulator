@@ -59,10 +59,10 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
+        newFileButton = new JButton(newButtonNormalImage);
         newFileButton.setBorderPainted(false);
         newFileButton.setContentAreaFilled(false);
         newFileButton.setFocusPainted(false);
-        newFileButton=new JButton(newButtonNormalImage);
         newFileButton.setBounds(10, 10, 45, 45);
         newFileButton.setFocusable(false);
         newFileButton.setFont(new Font("consolas", Font.BOLD, 11));
