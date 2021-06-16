@@ -24,7 +24,7 @@ import java.nio.file.Path;
  */
 public class HDMainScreenPanel extends JPanel implements ActionListener {
     JFileChooser fileChooser = new JFileChooser();
-    private JButton openFileButton=new JButton(); //開啟舊檔
+    private JButton openFileButton; //開啟舊檔
     private JButton newFileButton;  //新頁面的按鈕
     private JTextArea codingArea = new JTextArea(); //程式編輯區
     private JButton saveFileButton = new JButton();  //儲存檔案的按鈕
@@ -35,6 +35,8 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
 
     private ImageIcon newButtonNormalImage;
     private ImageIcon newButtonFocusImage;
+    private ImageIcon openButtonNormalImage;
+    private ImageIcon openButtonFocusImage;
 
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
@@ -55,17 +57,20 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         try {
             newButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonNormal.png")));
             newButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonFocus.png")));
+
+            openButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonFocus.png")));
+            openButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonNormal.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         newFileButton = new JButton(newButtonNormalImage);
+        newFileButton.setToolTipText("New File");
         newFileButton.setBorderPainted(false);
         newFileButton.setContentAreaFilled(false);
         newFileButton.setFocusPainted(false);
-        newFileButton.setBounds(10, 10, 45, 45);
+        newFileButton.setBounds(10, 0, 45, 45);
         newFileButton.setFocusable(false);
-        newFileButton.setFont(new Font("consolas", Font.BOLD, 11));
         newFileButton.addActionListener(this);
         newFileButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -81,11 +86,28 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             }
         });
 
-        openFileButton.setBounds(80, 10, 60, 30);
+
+        openFileButton=new JButton(openButtonNormalImage);
+        openFileButton.setToolTipText("Open File");
+        openFileButton.setBorderPainted(false);
+        openFileButton.setContentAreaFilled(false);
+        openFileButton.setFocusPainted(false);
+        openFileButton.setBounds(55, 0, 45, 45);
         openFileButton.setFocusable(false);
-        openFileButton.setFont(new Font("consolas", Font.BOLD, 11));
-        openFileButton.setText("OPEN");
         openFileButton.addActionListener(this);
+        openFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                openFileButton.setIcon(openButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                openFileButton.setIcon(openButtonNormalImage);
+            }
+        });
 
         saveFileButton.setBounds(150, 10, 60, 30);
         saveFileButton.setFocusable(false);
