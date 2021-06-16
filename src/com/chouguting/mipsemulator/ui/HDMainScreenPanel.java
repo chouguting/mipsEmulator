@@ -27,7 +27,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private JButton openFileButton; //開啟舊檔
     private JButton newFileButton;  //新頁面的按鈕
     private JTextArea codingArea = new JTextArea(); //程式編輯區
-    private JButton saveFileButton = new JButton();  //儲存檔案的按鈕
+    private JButton saveFileButton;  //儲存檔案的按鈕
     private JButton assembleButton = new JButton(); //編譯按鈕
     private JButton runButton = new JButton(); //執行程式的按鈕
     private JButton stepButton = new JButton(); //一步一步執行的按鈕
@@ -37,6 +37,8 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private ImageIcon newButtonFocusImage;
     private ImageIcon openButtonNormalImage;
     private ImageIcon openButtonFocusImage;
+    private ImageIcon saveButtonNormalImage;
+    private ImageIcon saveButtonFocusImage;
 
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
@@ -57,9 +59,10 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         try {
             newButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonNormal.png")));
             newButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonFocus.png")));
-
             openButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonFocus.png")));
             openButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonNormal.png")));
+            saveButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/saveButtonNormal.png")));
+            saveButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/saveButtonFocus.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,11 +112,27 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             }
         });
 
-        saveFileButton.setBounds(150, 10, 60, 30);
+        saveFileButton=new JButton(saveButtonNormalImage);
+        saveFileButton.setToolTipText("Save File");
+        saveFileButton.setBorderPainted(false);
+        saveFileButton.setContentAreaFilled(false);
+        saveFileButton.setFocusPainted(false);
+        saveFileButton.setBounds(100, 0, 45, 45);
         saveFileButton.setFocusable(false);
-        saveFileButton.setFont(new Font("consolas", Font.BOLD, 11));
-        saveFileButton.setText("SAVE");
         saveFileButton.addActionListener(this);
+        saveFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                saveFileButton.setIcon(saveButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                saveFileButton.setIcon(saveButtonNormalImage);
+            }
+        });
 
 
         assembleButton.setBounds(220, 10, 60, 30);
