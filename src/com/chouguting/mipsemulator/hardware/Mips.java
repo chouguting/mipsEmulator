@@ -19,6 +19,10 @@ public class Mips {
         program.loadProgram(inputProgram);
     }
 
+    public void step() {
+        program.step();
+    }
+
     public Program getProgram() {
         return program;
     }

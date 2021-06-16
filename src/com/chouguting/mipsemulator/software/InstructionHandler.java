@@ -27,7 +27,7 @@ public class InstructionHandler {
     private static Instruction singleLineToInstruction(Mips source, String line, int location, int indexInInstructionList) throws InstructionErrorException {
         Instruction resultInstruction = new Instruction(location);
         line = line.toLowerCase().strip();
-
+        String originalInstructionString = line;
         //實際的Label
         if (line.endsWith(":")) {
             return new Label(location, source.getProgram().getLabelList(), line.replaceAll(":", "").toLowerCase(), indexInInstructionList);
@@ -54,7 +54,7 @@ public class InstructionHandler {
                 addFrom1 = addFrom1.replaceAll("\\s+", "").toLowerCase();
                 String addFrom2 = buff[2];
                 addFrom2 = addFrom2.replaceAll("\\s+", "").toLowerCase();
-                return new RTypeInstruction(location, RTypeInstruction.ADDop, OperandHandler.stringToRegister(source, addFrom1),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.ADDop, OperandHandler.stringToRegister(source, addFrom1),
                         OperandHandler.stringToRegister(source, addFrom2), OperandHandler.stringToRegister(source, addTo),
                         RTypeInstruction.ADDfunc);
             } catch (Exception e) {
@@ -71,7 +71,7 @@ public class InstructionHandler {
                 subFrom = subFrom.replaceAll("\\s+", "").toLowerCase();
                 String subWith = buff[2];
                 subWith = subWith.replaceAll("\\s+", "").toLowerCase();
-                return new RTypeInstruction(location, RTypeInstruction.SUBop, OperandHandler.stringToRegister(source, subFrom),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.SUBop, OperandHandler.stringToRegister(source, subFrom),
                         OperandHandler.stringToRegister(source, subWith), OperandHandler.stringToRegister(source, subTo),
                         RTypeInstruction.SUBfunc);
             } catch (Exception e) {
@@ -88,7 +88,7 @@ public class InstructionHandler {
                 resultFrom1 = resultFrom1.replaceAll("\\s+", "").toLowerCase();
                 String resultFrom2 = buff[2];
                 resultFrom2 = resultFrom2.replaceAll("\\s+", "").toLowerCase();
-                return new RTypeInstruction(location, RTypeInstruction.ANDop, OperandHandler.stringToRegister(source, resultFrom1),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.ANDop, OperandHandler.stringToRegister(source, resultFrom1),
                         OperandHandler.stringToRegister(source, resultFrom2), OperandHandler.stringToRegister(source, resultTo),
                         RTypeInstruction.ANDfunc);
             } catch (Exception e) {
@@ -106,7 +106,7 @@ public class InstructionHandler {
                 resultFrom1 = resultFrom1.replaceAll("\\s+", "").toLowerCase();
                 String resultFrom2 = buff[2];
                 resultFrom2 = resultFrom2.replaceAll("\\s+", "").toLowerCase();
-                return new RTypeInstruction(location, RTypeInstruction.ORop, OperandHandler.stringToRegister(source, resultFrom1),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.ORop, OperandHandler.stringToRegister(source, resultFrom1),
                         OperandHandler.stringToRegister(source, resultFrom2), OperandHandler.stringToRegister(source, resultTo),
                         RTypeInstruction.ORfunc);
             } catch (Exception e) {
@@ -123,7 +123,7 @@ public class InstructionHandler {
                 resultFrom1 = resultFrom1.replaceAll("\\s+", "").toLowerCase();
                 String resultFrom2 = buff[2];
                 resultFrom2 = resultFrom2.replaceAll("\\s+", "").toLowerCase();
-                return new RTypeInstruction(location, RTypeInstruction.NORop, OperandHandler.stringToRegister(source, resultFrom1),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.NORop, OperandHandler.stringToRegister(source, resultFrom1),
                         OperandHandler.stringToRegister(source, resultFrom2), OperandHandler.stringToRegister(source, resultTo),
                         RTypeInstruction.NORfunc);
             } catch (Exception e) {
@@ -140,7 +140,7 @@ public class InstructionHandler {
                 resultFrom = resultFrom.replaceAll("\\s+", "").toLowerCase();
                 String shiftAmountStr = buff[2];
                 int shiftAmount = Integer.parseInt(shiftAmountStr.replaceAll("\\s+", ""));
-                return new RTypeInstruction(location, RTypeInstruction.SLLop, OperandHandler.stringToRegister(source, resultFrom),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.SLLop, OperandHandler.stringToRegister(source, resultFrom),
                         OperandHandler.stringToRegister(source, resultTo), shiftAmount, RTypeInstruction.SLLfunc);
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -156,7 +156,7 @@ public class InstructionHandler {
                 resultFrom = resultFrom.replaceAll("\\s+", "").toLowerCase();
                 String shiftAmountStr = buff[2];
                 int shiftAmount = Integer.parseInt(shiftAmountStr.replaceAll("\\s+", ""));
-                return new RTypeInstruction(location, RTypeInstruction.SRLop, OperandHandler.stringToRegister(source, resultFrom),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.SRLop, OperandHandler.stringToRegister(source, resultFrom),
                         OperandHandler.stringToRegister(source, resultTo), shiftAmount, RTypeInstruction.SRLfunc);
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -172,7 +172,7 @@ public class InstructionHandler {
                 compareFrom = compareFrom.replaceAll("\\s+", "").toLowerCase(); //rs
                 String compareTo = buff[2];
                 compareTo = compareTo.replaceAll("\\s+", "").toLowerCase(); //rt
-                return new RTypeInstruction(location, RTypeInstruction.SLTop, OperandHandler.stringToRegister(source, compareFrom),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.SLTop, OperandHandler.stringToRegister(source, compareFrom),
                         OperandHandler.stringToRegister(source, compareTo), OperandHandler.stringToRegister(source, resultTo), RTypeInstruction.SLTfunc);
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -188,7 +188,7 @@ public class InstructionHandler {
                 addFrom1 = addFrom1.replaceAll("\\s+", "").toLowerCase();
                 String addFrom2 = buff[2];
                 addFrom2 = addFrom2.replaceAll("\\s+", "").toLowerCase();
-                return new RTypeInstruction(location, RTypeInstruction.SUBop, OperandHandler.stringToRegister(source, addFrom1),
+                return new RTypeInstruction(originalInstructionString, location, RTypeInstruction.SUBop, OperandHandler.stringToRegister(source, addFrom1),
                         OperandHandler.stringToRegister(source, addFrom2), OperandHandler.stringToRegister(source, addTo),
                         RTypeInstruction.SUBfunc);
             } catch (Exception e) {
@@ -200,7 +200,7 @@ public class InstructionHandler {
         if (operation.equals("j")) {
             try {
                 operandLine.replaceAll("\\s+", "");
-                return new JTypeInstruction(location, JTypeInstruction.Jop, new Label(source.getProgram().getLabelList(), operandLine));
+                return new JTypeInstruction(originalInstructionString, location, JTypeInstruction.Jop, new Label(source.getProgram().getLabelList(), operandLine));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
             }
@@ -217,7 +217,7 @@ public class InstructionHandler {
                 String addFrom2 = buff[2];
                 addFrom2 = addFrom2.replaceAll("\\s+", "");
                 long addFromImmediate = Integer.parseInt(addFrom2);
-                return new ITypeInstruction(location, ITypeInstruction.ADDIop, OperandHandler.stringToRegister(source, addFrom1)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.ADDIop, OperandHandler.stringToRegister(source, addFrom1)
                         , OperandHandler.stringToRegister(source, addTo), new Immediate(addFromImmediate));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -234,7 +234,7 @@ public class InstructionHandler {
                 String[] baseTemp = offsetAndBase[1].split("\\)");
                 String base = baseTemp[0].replaceAll("\\s+", "").toLowerCase(); //剩下的這個Register是BASE
 
-                return new ITypeInstruction(location, ITypeInstruction.LWop, OperandHandler.stringToRegister(source, base)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.LWop, OperandHandler.stringToRegister(source, base)
                         , OperandHandler.stringToRegister(source, saveTo), new MemoryLocation(source.getMemory(), OperandHandler.stringToRegister(source, base), offset));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -253,7 +253,7 @@ public class InstructionHandler {
                 String[] baseTemp = offsetAndBase[1].split("\\)");
                 String base = baseTemp[0].replaceAll("\\s+", "").toLowerCase();
 
-                return new ITypeInstruction(location, ITypeInstruction.SWop, OperandHandler.stringToRegister(source, base)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.SWop, OperandHandler.stringToRegister(source, base)
                         , OperandHandler.stringToRegister(source, saveFrom), new MemoryLocation(source.getMemory(), OperandHandler.stringToRegister(source, base), offset));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -270,7 +270,7 @@ public class InstructionHandler {
                 String andFrom2 = buff[2];
                 andFrom2 = andFrom2.replaceAll("\\s+", "");
                 long andFromImmediate = Integer.parseInt(andFrom2);
-                return new ITypeInstruction(location, ITypeInstruction.ANDIop, OperandHandler.stringToRegister(source, andFrom1)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.ANDIop, OperandHandler.stringToRegister(source, andFrom1)
                         , OperandHandler.stringToRegister(source, andTo), new Immediate(andFromImmediate));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -287,7 +287,7 @@ public class InstructionHandler {
                 String orFrom2 = buff[2];
                 orFrom2 = orFrom2.replaceAll("\\s+", "");
                 long orFromImmediate = Integer.parseInt(orFrom2);
-                return new ITypeInstruction(location, ITypeInstruction.ORIop, OperandHandler.stringToRegister(source, orFrom1)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.ORIop, OperandHandler.stringToRegister(source, orFrom1)
                         , OperandHandler.stringToRegister(source, orTo), new Immediate(orFromImmediate));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -304,7 +304,7 @@ public class InstructionHandler {
                 String labelName = buff[2];
                 labelName = labelName.replaceAll("\\s+", "");
 
-                return new ITypeInstruction(location, ITypeInstruction.BEQop, OperandHandler.stringToRegister(source, compareFrom)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.BEQop, OperandHandler.stringToRegister(source, compareFrom)
                         , OperandHandler.stringToRegister(source, compareTo), new Label(source.getProgram().getLabelList(), labelName));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -321,7 +321,7 @@ public class InstructionHandler {
                 String labelName = buff[2];
                 labelName = labelName.replaceAll("\\s+", "");
 
-                return new ITypeInstruction(location, ITypeInstruction.BNEop, OperandHandler.stringToRegister(source, compareFrom)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.BNEop, OperandHandler.stringToRegister(source, compareFrom)
                         , OperandHandler.stringToRegister(source, compareTo), new Label(source.getProgram().getLabelList(), labelName));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
@@ -338,7 +338,7 @@ public class InstructionHandler {
                 String compareTo = buff[2];
                 compareTo = compareTo.replaceAll("\\s+", "");
                 long orFromImmediate = Integer.parseInt(compareTo);
-                return new ITypeInstruction(location, ITypeInstruction.SLTIop, OperandHandler.stringToRegister(source, compareFrom1)
+                return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.SLTIop, OperandHandler.stringToRegister(source, compareFrom1)
                         , OperandHandler.stringToRegister(source, resultTo), new Immediate(orFromImmediate));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);

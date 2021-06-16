@@ -31,22 +31,24 @@ public class RTypeInstruction extends Instruction {
     private int shamt;          //shift amount 給 sll , srl用的
     private int funcCode;       //function code
 
-    public RTypeInstruction(int locationInProgram, int operation, Operand oprRS, Operand oprRT, Operand oprRD, int funcCode) {
+    public RTypeInstruction(String instructionString, int locationInProgram, int operation, Operand oprRS, Operand oprRT, Operand oprRD, int funcCode) {
         super(locationInProgram);
         this.opCode = operation;
         this.rsOperand = oprRS;
         this.rtOperand = oprRT;
         this.rdOperand = oprRD;
         this.funcCode = funcCode;
+        this.instructionString = instructionString;
     }
 
-    public RTypeInstruction(int locationInProgram, int operation, Operand oprRT, Operand oprRD, int shamt, int funcCode) {
+    public RTypeInstruction(String instructionString, int locationInProgram, int operation, Operand oprRT, Operand oprRD, int shamt, int funcCode) {
         super(locationInProgram);
         this.opCode = operation;
         this.shamt = shamt;
         this.funcCode = funcCode;
         this.rdOperand = oprRD;
         this.rtOperand = oprRT;
+        this.instructionString = instructionString;
     }
 
     public int getFuncCode() {
@@ -68,4 +70,5 @@ public class RTypeInstruction extends Instruction {
     public int getShamt() {
         return shamt;
     }
+
 }

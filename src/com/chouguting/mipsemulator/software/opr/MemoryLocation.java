@@ -40,12 +40,14 @@ public class MemoryLocation implements Operand {
             total = total + memory.getData(locationOffset + 3) * 1;
             return total;
         }
+    }
 
+    public long getMemoryLocation() {
+        return locationOffset + baseRegister.getData();
     }
 
     @Override
     public void setData(long inputData) {
-        memory.setData(locationOffset, inputData);
         if (hasBase) {
             for (int i = 3; i >= 0; i--) {
                 long remainder = inputData % 256;

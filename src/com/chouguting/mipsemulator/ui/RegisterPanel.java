@@ -48,6 +48,4 @@ public class RegisterPanel extends JPanel {
             RegisterView[i].setText(Long.toString(source.getRegister(i).getData()));
         }
     }
-
-
 }

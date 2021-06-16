@@ -50,10 +50,19 @@ public class Program {
 
     //程式是否已經結束
     public boolean isEnded() {
-        if(currentInstruction  >= myInstructions.size()){
+        if (currentInstruction >= myInstructions.size()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
+    public ArrayList<Instruction> getInstructionsList() {
+        return myInstructions;
+    }
+
+    public Instruction getCurrentInstruction() {
+        return myInstructions.get((int) currentInstruction);
+    }
+
 }

@@ -16,12 +16,13 @@ public class ITypeInstruction extends Instruction {
     private Operand rtOperand;  //rt 通常是目標
     private Operand immOperand; //address or immediate
 
-    public ITypeInstruction(int locationInProgram, int operation, Operand oprRS, Operand oprRT, Operand immField) {
+    public ITypeInstruction(String instructionString, int locationInProgram, int operation, Operand oprRS, Operand oprRT, Operand immField) {
         super(locationInProgram);
         this.opCode = operation;
         this.rsOperand = oprRS;
         this.rtOperand = oprRT;
         this.immOperand = immField;
+        this.instructionString = instructionString;
     }
 
     public Operand getRsOperand() {

@@ -1,7 +1,7 @@
 package com.chouguting.mipsemulator.ui;
 
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
-import com.chouguting.mipsemulator.hardware.Mips;
+import com.chouguting.mipsemulator.hardware.MipsWithPipeline;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -37,12 +37,15 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
 
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
-    private Mips myMIPSEmulator;
+    PipelinedCircuitPanel pipeliningArea = new PipelinedCircuitPanel();
+    SingleCycleCircuitPanel singleCycleCircuitArea = new SingleCycleCircuitPanel();
+    ;
+    private MipsWithPipeline myMIPSEmulator;
 
     public HDMainScreenPanel() {
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1280, 720);
-
+        this.setPreferredSize(new Dimension(1280, 720));
         this.setLayout(null);
         //this.setResizable(false);
         //this.setTitle("MIPS emulator");
@@ -114,17 +117,15 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         registerPanel.setLocation(this.getWidth() - 270, 5);
 
 
-        //5 stage pipeline顯示區域
-        JPanel fiveStageArea = new JPanel();
-        fiveStageArea.setBackground(Color.GREEN);
-        fiveStageArea.setBounds(425, 10, 585, 300);
-        this.add(fiveStageArea);
+        //single cycle circuit顯示區域
+        singleCycleCircuitArea.setBackground(Color.white);
+        singleCycleCircuitArea.setBounds(425, 10, 585, 350);
+        this.add(singleCycleCircuitArea);
 
-        //5 stage pipeline顯示區域
-        JPanel circuitArea = new JPanel();
-        circuitArea.setBackground(Color.ORANGE);
-        circuitArea.setBounds(425, 315, 585, 355);
-        this.add(circuitArea);
+        //pipeline dataPath 顯示區域
+        pipeliningArea.setBackground(new Color(227, 191, 60));
+        pipeliningArea.setBounds(425, 365, 585, 305);
+        this.add(pipeliningArea);
 
         //內存搜尋區域
         memorySearchPanel.getMemSearchButton().addActionListener(this);
@@ -186,7 +187,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         //處理組譯按鈕
         if (e.getSource() == assembleButton) {
             try {
-                myMIPSEmulator = new Mips(codingArea.getText()); //建立一個新的MIPS INSTANCE
+                myMIPSEmulator = new MipsWithPipeline(codingArea.getText()); //建立一個新的MIPS INSTANCE
             } catch (InstructionErrorException instructionErrorException) { //如果組譯過程中有錯
                 if (instructionErrorException.isTraceable())
                     InstructionUIHandler.paintLine(codingArea, Color.red, (int) instructionErrorException.getErrorLocation());
@@ -194,6 +195,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
                 return;
             }
             registerPanel.refreshRegister(myMIPSEmulator);
+            pipeliningArea.updateLabel(myMIPSEmulator.getPipeliningController());
             stepButton.setEnabled(true);
 
             //內存搜尋區域重置
@@ -212,9 +214,10 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         if (e.getSource() == stepButton) {
             if (myMIPSEmulator.getProgram().isEnded()) {  //如果程式已經跑完
                 codingArea.getHighlighter().removeAllHighlights();
+                myMIPSEmulator.getPipeliningController().stepNext(); //流水線還是可以繼續推下去
                 //InstructionUIHandler.paintLine(codingArea, Color.cyan, myMIPSEmulator.getProgram().getCurrentInstructionLocation());
             } else { //如果程式還沒跑完 就STEP下一步
-                myMIPSEmulator.getProgram().step();
+                myMIPSEmulator.step();
                 if (myMIPSEmulator.getProgram().isEnded()) {
                     InstructionUIHandler.paintLine(codingArea, Color.cyan, (int) myMIPSEmulator.getProgram().getCurrentInstructionLocation());
                 } else {
@@ -222,6 +225,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
                 }
             }
             memorySearchPanel.updateTable(myMIPSEmulator.getMemory());
+            pipeliningArea.updateLabel(myMIPSEmulator.getPipeliningController());
             registerPanel.refreshRegister(myMIPSEmulator);
         }
 

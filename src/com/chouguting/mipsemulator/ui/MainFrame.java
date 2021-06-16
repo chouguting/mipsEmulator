@@ -8,11 +8,14 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1280, 720);
         this.setTitle("MIPS emulator");
-        this.setResizable(false);
-        this.setLayout(new BorderLayout());
-        this.add(hdMainScreenPanel, BorderLayout.CENTER);
+        this.setPreferredSize(new Dimension(1280, 720));
+        this.setMinimumSize(new Dimension(1280, 720));
+        this.setResizable(true);
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
+        this.add(hdMainScreenPanel);
+        //this.pack();
+        this.setLocationRelativeTo(null);  //設定出現在畫面正中央
         this.setVisible(true);
     }
 }
