@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class SingleCycleCircuitPanel extends JPanel {
     private BufferedImage image;
-
+    //happy holiday
     public SingleCycleCircuitPanel() {
         try {
             image = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/newPath.png"));
