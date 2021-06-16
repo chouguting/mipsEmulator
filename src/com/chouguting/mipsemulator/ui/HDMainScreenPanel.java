@@ -35,6 +35,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private JButton stepButton = new JButton(); //一步一步執行的按鈕
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
 
+
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
     PipelinedCircuitPanel pipeliningArea = new PipelinedCircuitPanel();
