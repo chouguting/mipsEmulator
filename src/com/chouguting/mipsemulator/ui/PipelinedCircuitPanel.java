@@ -5,6 +5,8 @@ import com.chouguting.mipsemulator.hardware.PipeliningController;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -19,16 +21,48 @@ public class PipelinedCircuitPanel extends JPanel {
     private BufferedImage pipeLineImage; //底圖
     private BufferedImage exMemForwardingImage; //mem階段的Forwarding
     private BufferedImage memWbForwardingImage; //wb階段的Forwarding
+    JButton dataHazardButton = new JButton();
+    private ImageIcon dataHazardNormal;
+    private ImageIcon dataHazardFocus;
 
     public PipelinedCircuitPanel() {
+        this.setLayout(null);
+
         try {
             pipeLineImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/pipelineHD.png"));
             exMemForwardingImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/exMemForwarding.png"));
             memWbForwardingImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memWbForwarding.png"));
+            dataHazardNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/dataPathNormal.png")));
+            dataHazardFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/dataPathFocus.png")));
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.setLayout(null);
+
+        dataHazardButton = new JButton(dataHazardNormal);
+        dataHazardButton.setBorderPainted(false);
+        dataHazardButton.setContentAreaFilled(false);
+        dataHazardButton.setFocusPainted(false);
+        dataHazardButton.setFocusable(false);
+        dataHazardButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                dataHazardButton.setIcon(dataHazardFocus);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                dataHazardButton.setIcon(dataHazardNormal);
+            }
+        });
+        dataHazardButton.setBounds(140, 240, 113, 60);
+        dataHazardButton.setVisible(false);
+        this.add(dataHazardButton);
+
+
         ifLabel.setFont(new Font("consolas", Font.PLAIN, 13));
         ifLabel.setBounds(10, 5, 130, 20);
         ifLabel.setBackground(Color.white);

@@ -15,6 +15,7 @@ public class PipeliningController {
     public static int WB_STAGE = 4;
     Mips parallelRunner;
     private ForwardingUnit forwardingUnit = new ForwardingUnit();
+    private HazardDetectionUnit hazardDetectionUnit = new HazardDetectionUnit();
     Instruction ifStage = null;
     Instruction idStage = null;
     Instruction exStage = null;

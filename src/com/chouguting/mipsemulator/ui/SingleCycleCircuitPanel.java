@@ -18,6 +18,7 @@ public class SingleCycleCircuitPanel extends JPanel {
     private BufferedImage rTypeGeneralDataPath;
     private BufferedImage iTypeLwDataPath;
     private BufferedImage iTypeSwDataPath;
+    private BufferedImage iTypeBeqDataPath;
 
     public SingleCycleCircuitPanel() {
         this.setLayout(null);
@@ -29,6 +30,7 @@ public class SingleCycleCircuitPanel extends JPanel {
             rTypeGeneralDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/rTypeAddDataPath.png"));
             iTypeLwDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeLwDataPath.png"));
             iTypeSwDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeSwDataPath.png"));
+            iTypeBeqDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeBeqDataPath.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,9 +49,10 @@ public class SingleCycleCircuitPanel extends JPanel {
             ITypeInstruction instruction = (ITypeInstruction) currentInstruction;
             if (instruction.getOpCode() == ITypeInstruction.LWop) {
                 g.drawImage(iTypeLwDataPath, 0, 0, this);
-            }
-            if (instruction.getOpCode() == ITypeInstruction.SWop) {
+            } else if (instruction.getOpCode() == ITypeInstruction.SWop) {
                 g.drawImage(iTypeSwDataPath, 0, 0, this);
+            } else if (instruction.getOpCode() == ITypeInstruction.BEQop || instruction.getOpCode() == ITypeInstruction.BNEop) {
+                g.drawImage(iTypeBeqDataPath, 0, 0, this);
             }
         }
     }
