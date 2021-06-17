@@ -73,8 +73,8 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             assembleButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/assembleButtonFocus.png")));
             runButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonNormal.png")));
             runButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonFocus.png")));
-            runButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
-            runButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
+            stepButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
+            stepButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -198,7 +198,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         stepButton.setBounds(235, 0, 45, 45);
         stepButton.setFocusable(false);
         stepButton.addActionListener(this);
-        stepButton.setEnabled(false);
+        //stepButton.setEnabled(false);
         stepButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
