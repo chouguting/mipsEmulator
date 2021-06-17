@@ -31,6 +31,9 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private JButton assembleButton; //編譯按鈕
     private JButton runButton; //執行程式的按鈕
     private JButton stepButton; //一步一步執行的按鈕
+    private JButton informationButton;
+    private JButton settingButton;
+
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
 
     private ImageIcon newButtonNormalImage;
@@ -45,6 +48,10 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private ImageIcon runButtonFocusImage;
     private ImageIcon stepButtonNormalImage;
     private ImageIcon stepButtonFocusImage;
+    private ImageIcon informationButtonNormalImage;
+    private ImageIcon informationButtonFocusImage;
+    private ImageIcon settingButtonNormalImage;
+    private ImageIcon settingButtonFocusImage;
 
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
@@ -75,6 +82,11 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             runButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonFocus.png")));
             stepButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
             stepButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
+            informationButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonNormal.png")));
+            informationButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonFocus.png")));
+            settingButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
+            settingButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,6 +225,29 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             }
         });
 
+        informationButton=new JButton(informationButtonNormalImage);
+        informationButton.setToolTipText("More Information...");
+        informationButton.setBorderPainted(false);
+        informationButton.setContentAreaFilled(false);
+        informationButton.setFocusPainted(false);
+        informationButton.setBounds(280, 0, 45, 45);
+        informationButton.setFocusable(false);
+        informationButton.addActionListener(this);
+        //stepButton.setEnabled(false);
+        informationButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                informationButton.setIcon(informationButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                informationButton.setIcon(informationButtonNormalImage);
+            }
+        });
+
         codingArea.setFont(new Font("consolas", Font.PLAIN, 25));
         codingArea.setLineWrap(true);
         codingArea.addKeyListener(new KeyListener() {   //當編輯區域有改變文字時
@@ -266,6 +301,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         this.add(assembleButton);
         this.add(runButton);
         this.add(stepButton);
+        this.add(informationButton);
         this.add(registerPanel);
         this.setVisible(true);
     }
