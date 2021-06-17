@@ -22,6 +22,10 @@ import javax.swing.*;
  */
 
 public class UpdateChecker extends SwingWorker<Object,Object> {
+    public static final int UNCHECKED=0;
+    public static final int CHECKING=-1;
+    public static final int HAS_UPDATE=1;
+    public static final int NO_UPDATE=-2;
 
     boolean foundNewVersion=false;
     String newVersionUrl;

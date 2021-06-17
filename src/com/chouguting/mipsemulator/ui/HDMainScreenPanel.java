@@ -1,5 +1,6 @@
 package com.chouguting.mipsemulator.ui;
 
+import com.chouguting.mipsemulator.exception.InfiniteLoopException;
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
 import com.chouguting.mipsemulator.hardware.MipsWithPipeline;
 
@@ -190,6 +191,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         runButton.setBounds(190, 0, 45, 45);
         runButton.setFocusable(false);
         runButton.setEnabled(false);
+        runButton.addActionListener(this);
         runButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -283,6 +285,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             @Override
             public void keyTyped(KeyEvent e) {
                 stepButton.setEnabled(false);
+                runButton.setEnabled(false);
                 memorySearchPanel.getMemSearchButton().setEnabled(false);
                 memorySearchPanel.getWordSearchButton().setEnabled(false);
                 scrollCodingPart.setBorder(null);
@@ -389,6 +392,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             pipeliningArea.updateLabel(myMIPSEmulator.getPipeliningController());
             singleCycleCircuitArea.update(myMIPSEmulator.getPipeliningController());
             stepButton.setEnabled(true);
+            runButton.setEnabled(true);
 
             //內存搜尋區域重置
             memorySearchPanel.getMemSearchButton().setEnabled(true);
@@ -422,6 +426,19 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             registerPanel.refreshRegister(myMIPSEmulator);
         }
 
+        if (e.getSource() == runButton) {
+            stepButton.setEnabled(false);
+            try {
+                myMIPSEmulator.run();
+                registerPanel.refreshRegister(myMIPSEmulator);
+                memorySearchPanel.updateTable(myMIPSEmulator.getMemory());
+                InstructionUIHandler.paintLine(codingArea, Color.cyan, (int) myMIPSEmulator.getProgram().getCurrentInstructionLocation());
+            } catch (InfiniteLoopException infiniteLoopException) {
+                infiniteLoopException.printStackTrace();
+                JOptionPane.showMessageDialog(this,"無限迴圈 請用STEP模式跑");
+            }
+        }
+
         //處理搜尋內存的事件 單純搜尋Address
         if (e.getSource() == memorySearchPanel.getMemSearchButton()) {
             memorySearchPanel.setDisplayMode(MemorySearchPanel.MOMERY_ADDRESS_MODE);
@@ -442,11 +459,8 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
 
         //處理設定按鈕的事件
         if(e.getSource()==settingButton){
-            HDSettingFrame settingFrame=new HDSettingFrame();
-            JDialog modal = new JDialog(settingFrame, "Settings", true);
-            modal.setSize(500,400);
-            modal.setLocationRelativeTo(null); //Center the modal
-            modal.setVisible(true);
+            new HDSettingDialog();
+
         }
 
         //處理information事件

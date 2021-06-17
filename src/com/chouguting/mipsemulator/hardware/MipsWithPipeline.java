@@ -23,4 +23,6 @@ public class MipsWithPipeline extends Mips {
         super.step();
         pipeliningController.stepNext();
     }
+
+
 }
