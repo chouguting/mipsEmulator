@@ -3,6 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/mipsEmulator_jar</output-path>
     <root id="archive" name="mipsEmulator.jar">
       <element id="module-output" name="mipsEmulator" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libararies/json-20210307.jar" path-in-jar="/" />
+      <element id="library" level="project" name="libararies" />
     </root>
   </artifact>
 </component>

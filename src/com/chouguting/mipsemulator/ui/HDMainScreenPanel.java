@@ -12,6 +12,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,22 +72,22 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
 
 
         try {
-            newButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonNormal.png")));
-            newButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonFocus.png")));
-            openButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonFocus.png")));
-            openButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonNormal.png")));
-            saveButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/saveButtonNormal.png")));
-            saveButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/saveButtonFocus.png")));
-            assembleButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/assembleButtonNormal.png")));
-            assembleButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/assembleButtonFocus.png")));
-            runButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonNormal.png")));
-            runButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonFocus.png")));
-            stepButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
-            stepButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
-            informationButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonNormal.png")));
-            informationButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonFocus.png")));
-            settingButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/settingButtonNormal.png")));
-            settingButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/settingButtonFocus.png")));
+            newButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/newButtonNormal.png")));
+            newButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/newButtonFocus.png")));
+            openButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/openButtonFocus.png")));
+            openButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/openButtonNormal.png")));
+            saveButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/saveButtonNormal.png")));
+            saveButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/saveButtonFocus.png")));
+            assembleButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/assembleButtonNormal.png")));
+            assembleButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/assembleButtonFocus.png")));
+            runButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/runButtonNormal.png")));
+            runButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/runButtonFocus.png")));
+            stepButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/stepButtonNormal.png")));
+            stepButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/stepButtonFocus.png")));
+            informationButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/informationButtonNormal.png")));
+            informationButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/informationButtonFocus.png")));
+            settingButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/settingButtonNormal.png")));
+            settingButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/settingButtonFocus.png")));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -436,6 +438,26 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             memorySearchPanel.setDisplayMode(MemorySearchPanel.DISPLAY_WORD_MODE);
             memorySearchPanel.setCurrentSearchIndex(Integer.parseInt(memorySearchPanel.getSearchIndexTextField().getText())); //先設定要搜尋的位置
             memorySearchPanel.updateTable(myMIPSEmulator.getMemory());  //更新畫面
+        }
+
+        //處理設定按鈕的事件
+        if(e.getSource()==settingButton){
+            HDSettingFrame settingFrame=new HDSettingFrame();
+            JDialog modal = new JDialog(settingFrame, "Settings", true);
+            modal.setSize(500,400);
+            modal.setLocationRelativeTo(null); //Center the modal
+            modal.setVisible(true);
+        }
+
+        //處理information事件
+        if(e.getSource()==informationButton){
+            try {
+                URI uri = new URI("https://chouguting.com/mipsEmulator");
+                Desktop dt = Desktop.getDesktop();
+                dt.browse(uri);
+            } catch (IOException | URISyntaxException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 
