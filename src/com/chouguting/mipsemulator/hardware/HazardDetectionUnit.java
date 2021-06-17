@@ -21,4 +21,13 @@ public class HazardDetectionUnit {
         }
         return false;
     }
+
+    public boolean hasControlHazard(Instruction ifStage) {
+        if (ifStage == null) return false;
+        if (ifStage.getClass() != ITypeInstruction.class) return false;
+        if(ifStage.getOpCode()==ITypeInstruction.BEQop||ifStage.getOpCode()==ITypeInstruction.BNEop){
+            return true;
+        }
+        return false;
+    }
 }

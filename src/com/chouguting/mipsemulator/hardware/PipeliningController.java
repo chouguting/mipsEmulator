@@ -23,6 +23,8 @@ public class PipeliningController {
     Instruction memStage = null;
     Instruction wbStage = null;
     private boolean hasToHandleDataHazard = false;
+    private boolean hasToHandleControlHazard = false;
+    int controlHazardCounter=2;
 
 
 
@@ -46,9 +48,21 @@ public class PipeliningController {
 
     //把下一個指令推入流水線
     public void stepNext() {
-        if (hasToHandleDataHazard) {
+        if (hasToHandleDataHazard) { //DATA HAZARD 需要 STALL一次
             hasToHandleDataHazard = false;
             pushToExecution(new Nops(0));
+        }
+        if (hasToHandleControlHazard) {  //CONTROL HAZARD 需要 STALL兩次
+            if(controlHazardCounter==0){
+                hasToHandleControlHazard = false;
+                for(int i=0;i<2;i++){
+                    stepNext();
+                }
+            }else{
+                pushInstruction(new Nops(0));
+                controlHazardCounter-=1;
+                return;
+            }
         }
         if (parallelRunner.getProgram().isEnded()) {
             pushInstruction(null);
@@ -56,8 +70,12 @@ public class PipeliningController {
             pushInstruction(parallelRunner.getProgram().getCurrentInstruction());
             parallelRunner.getProgram().step();
         }
-        if (dataHazard()) {
+        if (dataHazard()) { //如果有DATA HAZARD
             hasToHandleDataHazard = true; //下一輪要處理DATA HAZARD
+        }
+        if(controlHazard()){ //如果有CONTROL HAZARD
+            hasToHandleControlHazard=true;  //下一輪要處理CONTROL HAZARD
+            controlHazardCounter=2; //要STALL兩次
         }
     }
 
@@ -166,5 +184,14 @@ public class PipeliningController {
     //判斷有沒有DATA HAZARD
     public boolean dataHazard() {
         return hazardDetectionUnit.hasDataHazard(idStage, exStage);
+    }
+
+    //判斷有沒有CONTROL HAZARD
+    private boolean controlHazard() {
+        return hazardDetectionUnit.hasControlHazard(ifStage);
+    }
+
+    public boolean controlHazardHappening() {
+        return (hasToHandleControlHazard&&controlHazardCounter<2);
     }
 }

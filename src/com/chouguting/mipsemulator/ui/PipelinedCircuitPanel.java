@@ -20,12 +20,15 @@ public class PipelinedCircuitPanel extends JPanel {
     JLabel wbLabel = new JLabel("null");
     private BufferedImage pipeLineImage; //底圖
     JButton dataHazardButton = new JButton();
+    JButton controlHazardButton = new JButton();
     JButton exMemForwardingButton;
     private ImageIcon dataHazardNormal;
     private ImageIcon dataHazardFocus;
+    private ImageIcon controlHazardNormal;
+    private ImageIcon controlHazardFocus;
+    
     JButton exWbForwardingButton;
-    private BufferedImage exMemForwardingImage;
-    private BufferedImage memWbForwardingImage;
+    
     private ImageIcon exMemForwardingNormal;  //mem階段的Forwarding
     private ImageIcon exMemForwardingFocus;
     private ImageIcon exWbForwardingNormal;   //wb階段的Forwarding
@@ -36,10 +39,10 @@ public class PipelinedCircuitPanel extends JPanel {
 
         try {
             pipeLineImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/pipelineHD.png"));
-            exMemForwardingImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/exMemForwarding.png"));
-            memWbForwardingImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memWbForwarding.png"));
-            dataHazardNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/dataPathNormal.png")));
-            dataHazardFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/dataPathFocus.png")));
+            dataHazardNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("dataHazardNormal.png")));
+            dataHazardFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("dataHazardFocus.png")));
+            controlHazardNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("controlHazardNormal.png")));
+            controlHazardFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("controlHazardFocus.png")));
             exMemForwardingNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memForwardNormal.png")));
             exMemForwardingFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memForwardFocus.png")));
             exWbForwardingNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/wbForwardNormal.png")));
@@ -69,6 +72,28 @@ public class PipelinedCircuitPanel extends JPanel {
         dataHazardButton.setBounds(140, 240, 113, 60);
         dataHazardButton.setVisible(false);
         this.add(dataHazardButton);
+
+        controlHazardButton = new JButton(controlHazardNormal);
+        controlHazardButton.setBorderPainted(false);
+        controlHazardButton.setContentAreaFilled(false);
+        controlHazardButton.setFocusPainted(false);
+        controlHazardButton.setFocusable(false);
+        controlHazardButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                controlHazardButton.setIcon(controlHazardFocus);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                controlHazardButton.setIcon(controlHazardNormal);
+            }
+        });
+        controlHazardButton.setBounds(270, 240, 113, 60);
+        controlHazardButton.setVisible(false);
+        this.add(controlHazardButton);
 
         exMemForwardingButton = new JButton(exMemForwardingNormal);
         exMemForwardingButton.setBorderPainted(false);
@@ -166,6 +191,11 @@ public class PipelinedCircuitPanel extends JPanel {
             dataHazardButton.setVisible(true);
         } else {
             dataHazardButton.setVisible(false);
+        }
+        if (pipeliningController.controlHazardHappening()) {
+            controlHazardButton.setVisible(true);
+        } else {
+            controlHazardButton.setVisible(false);
         }
         if (pipeliningController.exMemForwarding()) {
             exMemForwardingButton.setVisible(true);
