@@ -7,6 +7,7 @@ public class MainFrame extends JFrame {
     HDMainScreenPanel hdMainScreenPanel = new HDMainScreenPanel();
 
     public MainFrame() {
+        new UpdateChecker(this).execute();  //檢查有沒有更新版的軟體
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("MIPS emulator");
         this.setPreferredSize(new Dimension(1280, 720));
