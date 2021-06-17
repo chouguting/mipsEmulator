@@ -2,6 +2,7 @@ package com.chouguting.mipsemulator;
 
 import com.chouguting.mipsemulator.ui.MainFrame;
 
+
 /**
  * 主程式的進入點
  */
