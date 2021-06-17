@@ -3,6 +3,7 @@ package com.chouguting.mipsemulator.ui;
 import com.chouguting.mipsemulator.hardware.PipeliningController;
 import com.chouguting.mipsemulator.software.ITypeInstruction;
 import com.chouguting.mipsemulator.software.Instruction;
+import com.chouguting.mipsemulator.software.JTypeInstruction;
 import com.chouguting.mipsemulator.software.RTypeInstruction;
 
 import javax.imageio.ImageIO;
@@ -19,6 +20,8 @@ public class SingleCycleCircuitPanel extends JPanel {
     private BufferedImage iTypeLwDataPath;
     private BufferedImage iTypeSwDataPath;
     private BufferedImage iTypeBeqDataPath;
+    private BufferedImage iTypeGeneralDataPath;
+    private BufferedImage jTypeDataPath;
 
     public SingleCycleCircuitPanel() {
         this.setLayout(null);
@@ -31,6 +34,8 @@ public class SingleCycleCircuitPanel extends JPanel {
             iTypeLwDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeLwDataPath.png"));
             iTypeSwDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeSwDataPath.png"));
             iTypeBeqDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeBeqDataPath.png"));
+            iTypeGeneralDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/iTypeGeneralDataPath.png"));
+            jTypeDataPath = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/jTypeDataPath.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,7 +58,11 @@ public class SingleCycleCircuitPanel extends JPanel {
                 g.drawImage(iTypeSwDataPath, 0, 0, this);
             } else if (instruction.getOpCode() == ITypeInstruction.BEQop || instruction.getOpCode() == ITypeInstruction.BNEop) {
                 g.drawImage(iTypeBeqDataPath, 0, 0, this);
+            }else{
+                g.drawImage(iTypeGeneralDataPath, 0, 0, this);
             }
+        }else if (currentInstruction.getClass() == JTypeInstruction.class){
+            g.drawImage(jTypeDataPath, 0, 0, this);
         }
     }
 
