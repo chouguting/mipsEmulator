@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * 主程式的進入點
  */
 public class EmulatorRunner {
-    public static final String versionCode="v0.6";
+    public static final String versionCode="v0.8";
     public static void main(String[] args) {
         new MainFrame();
     }

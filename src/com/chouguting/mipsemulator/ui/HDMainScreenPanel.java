@@ -12,6 +12,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -436,6 +438,26 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             memorySearchPanel.setDisplayMode(MemorySearchPanel.DISPLAY_WORD_MODE);
             memorySearchPanel.setCurrentSearchIndex(Integer.parseInt(memorySearchPanel.getSearchIndexTextField().getText())); //先設定要搜尋的位置
             memorySearchPanel.updateTable(myMIPSEmulator.getMemory());  //更新畫面
+        }
+
+        //處理設定按鈕的事件
+        if(e.getSource()==settingButton){
+            HDSettingFrame settingFrame=new HDSettingFrame();
+            JDialog modal = new JDialog(settingFrame, "Settings", true);
+            modal.setSize(500,400);
+            modal.setLocationRelativeTo(null); //Center the modal
+            modal.setVisible(true);
+        }
+
+        //處理information事件
+        if(e.getSource()==informationButton){
+            try {
+                URI uri = new URI("https://chouguting.com/mipsEmulator");
+                Desktop dt = Desktop.getDesktop();
+                dt.browse(uri);
+            } catch (IOException | URISyntaxException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 
