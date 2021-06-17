@@ -3,14 +3,12 @@ package com.chouguting.mipsemulator.ui;
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
 import com.chouguting.mipsemulator.hardware.MipsWithPipeline;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,20 +24,40 @@ import java.nio.file.Path;
  */
 public class HDMainScreenPanel extends JPanel implements ActionListener {
     JFileChooser fileChooser = new JFileChooser();
-    private JButton openFileButton = new JButton(); //開啟舊檔
-    private JButton newFileButton = new JButton();  //新頁面的按鈕
+    private JButton openFileButton; //開啟舊檔
+    private JButton newFileButton;  //新頁面的按鈕
     private JTextArea codingArea = new JTextArea(); //程式編輯區
-    private JButton saveFileButton = new JButton();  //儲存檔案的按鈕
-    private JButton assembleButton = new JButton(); //編譯按鈕
-    private JButton runButton = new JButton(); //執行程式的按鈕
-    private JButton stepButton = new JButton(); //一步一步執行的按鈕
+    private JButton saveFileButton;  //儲存檔案的按鈕
+    private JButton assembleButton; //編譯按鈕
+    private JButton runButton; //執行程式的按鈕
+    private JButton stepButton; //一步一步執行的按鈕
+    private JButton informationButton;
+    private JButton settingButton;
+
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
+
+    private ImageIcon newButtonNormalImage;
+    private ImageIcon newButtonFocusImage;
+    private ImageIcon openButtonNormalImage;
+    private ImageIcon openButtonFocusImage;
+    private ImageIcon saveButtonNormalImage;
+    private ImageIcon saveButtonFocusImage;
+    private ImageIcon assembleButtonNormalImage;
+    private ImageIcon assembleButtonFocusImage;
+    private ImageIcon runButtonNormalImage;
+    private ImageIcon runButtonFocusImage;
+    private ImageIcon stepButtonNormalImage;
+    private ImageIcon stepButtonFocusImage;
+    private ImageIcon informationButtonNormalImage;
+    private ImageIcon informationButtonFocusImage;
+    private ImageIcon settingButtonNormalImage;
+    private ImageIcon settingButtonFocusImage;
 
     private RegisterPanel registerPanel = new RegisterPanel();
     MemorySearchPanel memorySearchPanel = new MemorySearchPanel();
     PipelinedCircuitPanel pipeliningArea = new PipelinedCircuitPanel();
     SingleCycleCircuitPanel singleCycleCircuitArea = new SingleCycleCircuitPanel();
-    ;
+
     private MipsWithPipeline myMIPSEmulator;
 
     public HDMainScreenPanel() {
@@ -50,43 +68,185 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         //this.setResizable(false);
         //this.setTitle("MIPS emulator");
 
-        newFileButton.setBounds(10, 10, 60, 30);
+
+        try {
+            newButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonNormal.png")));
+            newButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/newButtonFocus.png")));
+            openButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonFocus.png")));
+            openButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/openButtonNormal.png")));
+            saveButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/saveButtonNormal.png")));
+            saveButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/saveButtonFocus.png")));
+            assembleButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/assembleButtonNormal.png")));
+            assembleButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/assembleButtonFocus.png")));
+            runButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonNormal.png")));
+            runButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/runButtonFocus.png")));
+            stepButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
+            stepButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
+            informationButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonNormal.png")));
+            informationButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonFocus.png")));
+            settingButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
+            settingButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        newFileButton = new JButton(newButtonNormalImage);
+        newFileButton.setToolTipText("New File");
+        newFileButton.setBorderPainted(false);
+        newFileButton.setContentAreaFilled(false);
+        newFileButton.setFocusPainted(false);
+        newFileButton.setBounds(10, 0, 45, 45);
         newFileButton.setFocusable(false);
-        newFileButton.setFont(new Font("consolas", Font.BOLD, 11));
-        newFileButton.setText("NEW");
         newFileButton.addActionListener(this);
+        newFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                newFileButton.setIcon(newButtonFocusImage);
+            }
 
-        openFileButton.setBounds(80, 10, 60, 30);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                newFileButton.setIcon(newButtonNormalImage);
+            }
+        });
+
+
+        openFileButton=new JButton(openButtonNormalImage);
+        openFileButton.setToolTipText("Open File");
+        openFileButton.setBorderPainted(false);
+        openFileButton.setContentAreaFilled(false);
+        openFileButton.setFocusPainted(false);
+        openFileButton.setBounds(55, 0, 45, 45);
         openFileButton.setFocusable(false);
-        openFileButton.setFont(new Font("consolas", Font.BOLD, 11));
-        openFileButton.setText("OPEN");
         openFileButton.addActionListener(this);
+        openFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                openFileButton.setIcon(openButtonFocusImage);
+            }
 
-        saveFileButton.setBounds(150, 10, 60, 30);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                openFileButton.setIcon(openButtonNormalImage);
+            }
+        });
+
+        saveFileButton=new JButton(saveButtonNormalImage);
+        saveFileButton.setToolTipText("Save File");
+        saveFileButton.setBorderPainted(false);
+        saveFileButton.setContentAreaFilled(false);
+        saveFileButton.setFocusPainted(false);
+        saveFileButton.setBounds(100, 0, 45, 45);
         saveFileButton.setFocusable(false);
-        saveFileButton.setFont(new Font("consolas", Font.BOLD, 11));
-        saveFileButton.setText("SAVE");
         saveFileButton.addActionListener(this);
+        saveFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                saveFileButton.setIcon(saveButtonFocusImage);
+            }
 
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                saveFileButton.setIcon(saveButtonNormalImage);
+            }
+        });
 
-        assembleButton.setBounds(220, 10, 60, 30);
+        assembleButton=new JButton(assembleButtonNormalImage);
+        assembleButton.setToolTipText("Assemble");
+        assembleButton.setBorderPainted(false);
+        assembleButton.setContentAreaFilled(false);
+        assembleButton.setFocusPainted(false);
+        assembleButton.setBounds(145, 0, 45, 45);
         assembleButton.setFocusable(false);
-        assembleButton.setFont(new Font("consolas", Font.BOLD, 11));
-        assembleButton.setText("ASEM");
         assembleButton.addActionListener(this);
+        assembleButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                assembleButton.setIcon(assembleButtonFocusImage);
+            }
 
-        runButton.setBounds(290, 10, 60, 30);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                assembleButton.setIcon(assembleButtonNormalImage);
+            }
+        });
+
+        runButton=new JButton(runButtonNormalImage);
+        runButton.setToolTipText("Run");
+        runButton.setBorderPainted(false);
+        runButton.setContentAreaFilled(false);
+        runButton.setFocusPainted(false);
+        runButton.setBounds(190, 0, 45, 45);
         runButton.setFocusable(false);
-        runButton.setFont(new Font("consolas", Font.BOLD, 11));
-        runButton.setText("RUN");
-        runButton.setEnabled(false);
+        //runButton.setEnabled(false);
+        runButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                runButton.setIcon(runButtonFocusImage);
+            }
 
-        stepButton.setBounds(360, 10, 60, 30);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                runButton.setIcon(runButtonNormalImage);
+            }
+        });
+
+        stepButton=new JButton(stepButtonNormalImage);
+        stepButton.setToolTipText("Step");
+        stepButton.setBorderPainted(false);
+        stepButton.setContentAreaFilled(false);
+        stepButton.setFocusPainted(false);
+        stepButton.setBounds(235, 0, 45, 45);
         stepButton.setFocusable(false);
-        stepButton.setFont(new Font("consolas", Font.BOLD, 11));
-        stepButton.setText("STEP");
         stepButton.addActionListener(this);
-        stepButton.setEnabled(false);
+        //stepButton.setEnabled(false);
+        stepButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                stepButton.setIcon(stepButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                stepButton.setIcon(stepButtonNormalImage);
+            }
+        });
+
+        informationButton=new JButton(informationButtonNormalImage);
+        informationButton.setToolTipText("More Information...");
+        informationButton.setBorderPainted(false);
+        informationButton.setContentAreaFilled(false);
+        informationButton.setFocusPainted(false);
+        informationButton.setBounds(280, 0, 45, 45);
+        informationButton.setFocusable(false);
+        informationButton.addActionListener(this);
+        //stepButton.setEnabled(false);
+        informationButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                informationButton.setIcon(informationButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                informationButton.setIcon(informationButtonNormalImage);
+            }
+        });
 
         codingArea.setFont(new Font("consolas", Font.PLAIN, 25));
         codingArea.setLineWrap(true);
@@ -141,6 +301,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         this.add(assembleButton);
         this.add(runButton);
         this.add(stepButton);
+        this.add(informationButton);
         this.add(registerPanel);
         this.setVisible(true);
     }
