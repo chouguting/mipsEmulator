@@ -31,8 +31,8 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
     private JButton assembleButton; //編譯按鈕
     private JButton runButton; //執行程式的按鈕
     private JButton stepButton; //一步一步執行的按鈕
-    private JButton informationButton;
-    private JButton settingButton;
+    private JButton informationButton;//檢查版本的按鈕
+    private JButton settingButton;//設定
 
     private JScrollPane scrollCodingPart = new JScrollPane(codingArea);
 
@@ -84,8 +84,8 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             stepButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
             informationButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonNormal.png")));
             informationButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/informationButtonFocus.png")));
-            settingButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonNormal.png")));
-            settingButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/stepButtonFocus.png")));
+            settingButtonNormalImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/settingButtonNormal.png")));
+            settingButtonFocusImage=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/settingButtonFocus.png")));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -237,7 +237,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         informationButton.setBounds(280, 0, 45, 45);
         informationButton.setFocusable(false);
         informationButton.addActionListener(this);
-        //stepButton.setEnabled(false);
+        //informationButton.setEnabled(false);
         informationButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -249,6 +249,29 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 informationButton.setIcon(informationButtonNormalImage);
+            }
+        });
+
+        settingButton=new JButton(settingButtonNormalImage);
+        settingButton.setToolTipText("Setting");
+        settingButton.setBorderPainted(false);
+        settingButton.setContentAreaFilled(false);
+        settingButton.setFocusPainted(false);
+        settingButton.setBounds(325, 0, 45, 45);
+        settingButton.setFocusable(false);
+        settingButton.addActionListener(this);
+        //settingButton.setEnabled(false);
+        settingButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                settingButton.setIcon(settingButtonFocusImage);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                settingButton.setIcon(settingButtonNormalImage);
             }
         });
 
@@ -306,6 +329,7 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         this.add(runButton);
         this.add(stepButton);
         this.add(informationButton);
+        this.add(settingButton);
         this.add(registerPanel);
         this.setVisible(true);
     }
