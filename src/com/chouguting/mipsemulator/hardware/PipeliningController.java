@@ -2,6 +2,7 @@ package com.chouguting.mipsemulator.hardware;
 
 import com.chouguting.mipsemulator.exception.InstructionErrorException;
 import com.chouguting.mipsemulator.software.Instruction;
+import com.chouguting.mipsemulator.software.Nops;
 
 /**
  * 處理Pipeline的內容及控制
@@ -21,6 +22,7 @@ public class PipeliningController {
     Instruction exStage = null;
     Instruction memStage = null;
     Instruction wbStage = null;
+    private boolean hasToHandleDataHazard = false;
 
 
 
@@ -31,23 +33,31 @@ public class PipeliningController {
 
         }
         for (int i = 0; i < 3; i++) {
-            if (parallelRunner.getProgram().isEnded()) {
+            /*if (parallelRunner.getProgram().isEnded()) {
                 pushInstruction(null);
             } else {
                 pushInstruction(parallelRunner.getProgram().getCurrentInstruction());
                 parallelRunner.getProgram().step();
-            }
-
+            }*/
+            stepNext();
         }
     }
 
+
     //把下一個指令推入流水線
     public void stepNext() {
+        if (hasToHandleDataHazard) {
+            hasToHandleDataHazard = false;
+            pushToExecution(new Nops(0));
+        }
         if (parallelRunner.getProgram().isEnded()) {
             pushInstruction(null);
         } else {
             pushInstruction(parallelRunner.getProgram().getCurrentInstruction());
             parallelRunner.getProgram().step();
+        }
+        if (dataHazard()) {
+            hasToHandleDataHazard = true; //下一輪要處理DATA HAZARD
         }
     }
 
@@ -59,7 +69,7 @@ public class PipeliningController {
         ifStage = instruction;
     }
 
-    public void pushToExecution(Instruction instruction, int currentLocation) {
+    public void pushToExecution(Instruction instruction) {
         wbStage = memStage;
         memStage = exStage;
         exStage = instruction;
@@ -149,9 +159,12 @@ public class PipeliningController {
     }
 
     //判斷需不需要前饋
-    public boolean memWbForwarding() {
-        return forwardingUnit.memWbForwarding(exStage, memStage, wbStage);
+    public boolean exWbForwarding() {
+        return forwardingUnit.exWbForwarding(exStage, memStage, wbStage);
     }
 
-
+    //判斷有沒有DATA HAZARD
+    public boolean dataHazard() {
+        return hazardDetectionUnit.hasDataHazard(idStage, exStage);
+    }
 }

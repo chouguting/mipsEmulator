@@ -38,7 +38,7 @@ public class ForwardingUnit {
     }
 
     //判斷需不需要前饋
-    public boolean memWbForwarding(Instruction exStage, Instruction memStage, Instruction wbStage) {
+    public boolean exWbForwarding(Instruction exStage, Instruction memStage, Instruction wbStage) {
         if (exStage == null || wbStage == null) return false;
 
         //捼果前面那一層已經前饋一樣的東西 這邊就不用了

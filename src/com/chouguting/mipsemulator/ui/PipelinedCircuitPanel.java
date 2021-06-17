@@ -19,11 +19,17 @@ public class PipelinedCircuitPanel extends JPanel {
     JLabel memLabel = new JLabel("null");
     JLabel wbLabel = new JLabel("null");
     private BufferedImage pipeLineImage; //底圖
-    private BufferedImage exMemForwardingImage; //mem階段的Forwarding
-    private BufferedImage memWbForwardingImage; //wb階段的Forwarding
     JButton dataHazardButton = new JButton();
+    JButton exMemForwardingButton;
     private ImageIcon dataHazardNormal;
     private ImageIcon dataHazardFocus;
+    JButton exWbForwardingButton;
+    private BufferedImage exMemForwardingImage;
+    private BufferedImage memWbForwardingImage;
+    private ImageIcon exMemForwardingNormal;  //mem階段的Forwarding
+    private ImageIcon exMemForwardingFocus;
+    private ImageIcon exWbForwardingNormal;   //wb階段的Forwarding
+    private ImageIcon exWbForwardingFocus;
 
     public PipelinedCircuitPanel() {
         this.setLayout(null);
@@ -34,8 +40,10 @@ public class PipelinedCircuitPanel extends JPanel {
             memWbForwardingImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memWbForwarding.png"));
             dataHazardNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/dataPathNormal.png")));
             dataHazardFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/dataPathFocus.png")));
-
-
+            exMemForwardingNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memForwardNormal.png")));
+            exMemForwardingFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/memForwardFocus.png")));
+            exWbForwardingNormal = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/wbForwardNormal.png")));
+            exWbForwardingFocus = new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("resources/images/wbForwardFocus.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +69,50 @@ public class PipelinedCircuitPanel extends JPanel {
         dataHazardButton.setBounds(140, 240, 113, 60);
         dataHazardButton.setVisible(false);
         this.add(dataHazardButton);
+
+        exMemForwardingButton = new JButton(exMemForwardingNormal);
+        exMemForwardingButton.setBorderPainted(false);
+        exMemForwardingButton.setContentAreaFilled(false);
+        exMemForwardingButton.setFocusPainted(false);
+        exMemForwardingButton.setFocusable(false);
+        exMemForwardingButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                exMemForwardingButton.setIcon(exMemForwardingFocus);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                exMemForwardingButton.setIcon(exMemForwardingNormal);
+            }
+        });
+        exMemForwardingButton.setBounds(305, 120, 88, 55);
+        exMemForwardingButton.setVisible(false);
+        this.add(exMemForwardingButton);
+
+        exWbForwardingButton = new JButton(exWbForwardingNormal);
+        exWbForwardingButton.setBorderPainted(false);
+        exWbForwardingButton.setContentAreaFilled(false);
+        exWbForwardingButton.setFocusPainted(false);
+        exWbForwardingButton.setFocusable(false);
+        exWbForwardingButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                exWbForwardingButton.setIcon(exWbForwardingFocus);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                exWbForwardingButton.setIcon(exWbForwardingNormal);
+            }
+        });
+        exWbForwardingButton.setBounds(310, 180, 198, 57);
+        exWbForwardingButton.setVisible(false);
+        this.add(exWbForwardingButton);
 
 
         ifLabel.setFont(new Font("consolas", Font.PLAIN, 13));
@@ -98,8 +150,8 @@ public class PipelinedCircuitPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(pipeLineImage, 0, 0, this); // see javadoc for more info on the parameters
-        if (hasExMemForwardingImage) g.drawImage(exMemForwardingImage, 0, 0, this);
-        if (hasMemWbForwardingImage) g.drawImage(memWbForwardingImage, 0, 0, this);
+        //if (hasExMemForwardingImage) g.drawImage(exMemForwardingImage, 0, 0, this);
+        //if (hasMemWbForwardingImage) g.drawImage(memWbForwardingImage, 0, 0, this);
     }
 
     //更新PIPELINE的畫面顯示
@@ -110,9 +162,23 @@ public class PipelinedCircuitPanel extends JPanel {
         exLabel.setText(instructions[PipeliningController.EX_STAGE]);
         memLabel.setText(instructions[PipeliningController.MEM_STAGE]);
         wbLabel.setText(instructions[PipeliningController.WB_STAGE]);
-
+        if (pipeliningController.dataHazard()) {
+            dataHazardButton.setVisible(true);
+        } else {
+            dataHazardButton.setVisible(false);
+        }
+        if (pipeliningController.exMemForwarding()) {
+            exMemForwardingButton.setVisible(true);
+        } else {
+            exMemForwardingButton.setVisible(false);
+        }
+        if (pipeliningController.exWbForwarding()) {
+            exWbForwardingButton.setVisible(true);
+        } else {
+            exWbForwardingButton.setVisible(false);
+        }
         hasExMemForwardingImage = pipeliningController.exMemForwarding();
-        hasMemWbForwardingImage = pipeliningController.memWbForwarding();
+        hasMemWbForwardingImage = pipeliningController.exWbForwarding();
         this.repaint();
     }
 
