@@ -187,18 +187,20 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         runButton.setFocusPainted(false);
         runButton.setBounds(190, 0, 45, 45);
         runButton.setFocusable(false);
-        //runButton.setEnabled(false);
+        runButton.setEnabled(false);
         runButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                runButton.setIcon(runButtonFocusImage);
+                if (runButton.isEnabled())
+                    runButton.setIcon(runButtonFocusImage);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                runButton.setIcon(runButtonNormalImage);
+                if (runButton.isEnabled())
+                    runButton.setIcon(runButtonNormalImage);
             }
         });
 
@@ -210,18 +212,20 @@ public class HDMainScreenPanel extends JPanel implements ActionListener {
         stepButton.setBounds(235, 0, 45, 45);
         stepButton.setFocusable(false);
         stepButton.addActionListener(this);
-        //stepButton.setEnabled(false);
+        stepButton.setEnabled(false);
         stepButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                stepButton.setIcon(stepButtonFocusImage);
+                if (stepButton.isEnabled())
+                    stepButton.setIcon(stepButtonFocusImage);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                stepButton.setIcon(stepButtonNormalImage);
+                if (stepButton.isEnabled())
+                    stepButton.setIcon(stepButtonNormalImage);
             }
         });
 
