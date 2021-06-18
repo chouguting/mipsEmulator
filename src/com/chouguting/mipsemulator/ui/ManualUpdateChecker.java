@@ -26,10 +26,10 @@ public class ManualUpdateChecker extends UpdateChecker{
         if(!foundNewVersion){
             dialog.getCheckUpdateButton().setText("已是最新版本");
             dialog.setUpdateStatus(UpdateChecker.NO_UPDATE);
-            dialog.setNewVersionUrl(this.newVersionUrl);
             return;
         }
         dialog.getCheckUpdateButton().setText("有可用的更新");
         dialog.setUpdateStatus(UpdateChecker.HAS_UPDATE);
+        dialog.setNewVersionUrl(this.newVersionUrl);
     }
 }
