@@ -4,8 +4,8 @@
 快來看看全新的MIPS模擬器!
 =========================
 
-![](mdImages/mainScreen.png) \
-\
+![](mdImages/mainScreen.png) 
+
 
 專案介紹
 --------
@@ -25,26 +25,27 @@ GUI介紹
 ![](mdImages/saveButtonNormal.png) 儲存檔案
 ![](mdImages/informationNormal.png) 關於mdImages資訊 \
 ![](mdImages/assembleButtonNormal.png) 程式的組譯
-![](mdImages/settingButtonNormal.png) 可設定畫質、檢查更新 \
-\
+![](mdImages/settingButtonNormal.png) 可設定畫質、檢查更新 
+
 
 ### 記憶體搜尋區塊
 
-![](mdImages/locationSearchEngine.png) \
-\
+![](mdImages/locationSearchEngine.png) 
+
+
 
 我們可以透過這個區域得知輸入值記憶體的資訊（MEM）或者是以字組（WORD，MIPS一個WORD等於四個Bytes）
-\
+
 
 ### 暫存器（Register）的資訊
 
-![](mdImages/register.png) \
+![](mdImages/register.png) 
 
 ### Pipeline Datapath
 
 ![](mdImages/pipelineDatapath.png) \
 \
-這裡會顯示pipeline的執行過程，並會顯示危障及前饋的狀況。 \
+這裡會顯示pipeline的執行過程，並會顯示危障及前饋的狀況。 
 
 支援的指令
 ----------
