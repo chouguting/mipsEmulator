@@ -14,23 +14,46 @@ public class InstructionHandler {
     public static ArrayList<Instruction> stringToInstructions(Mips source, String allText) throws InstructionErrorException {
         ArrayList<Instruction> resultList = new ArrayList<Instruction>();
         String[] lines = allText.split("\\n");
+        ArrayList<String> ackLabelList=new ArrayList<>();
+        int counter=0;
         for (int i = 0; i < lines.length; i++) {
             if (lines[i].isBlank()) continue;
-            Instruction thisLiseOfInstruction = singleLineToInstruction(source, lines[i], i, resultList.size());
-            if (thisLiseOfInstruction.getClass() != Label.class)
+            if(!singleLineToInstructionLabelOnly(source, lines[i], i, counter,ackLabelList)){
+                counter++;
+            }
+        }
+        for (int i = 0; i < lines.length; i++) {
+            if (lines[i].isBlank()) continue;
+            Instruction thisLiseOfInstruction = singleLineToInstruction(source, lines[i], i, resultList.size(),ackLabelList);
+            if (thisLiseOfInstruction != null)
                 resultList.add(thisLiseOfInstruction);
         }
         return resultList;
     }
 
-    //把單一行字串轉換成一條指令
-    private static Instruction singleLineToInstruction(Mips source, String line, int location, int indexInInstructionList) throws InstructionErrorException {
-        Instruction resultInstruction = new Instruction(location);
+
+    private static boolean singleLineToInstructionLabelOnly(Mips source, String line, int location, int indexInInstructionList, ArrayList<String> ackLabelList) throws InstructionErrorException{
         line = line.toLowerCase().strip();
         String originalInstructionString = line;
         //實際的Label
         if (line.endsWith(":")) {
-            return new Label(location, source.getProgram().getLabelList(), line.replaceAll(":", "").toLowerCase(), indexInInstructionList);
+            new Label(location, source.getProgram().getLabelList(), line.replaceAll(":", "").toLowerCase(), indexInInstructionList,ackLabelList);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    //把單一行字串轉換成一條指令
+    private static Instruction singleLineToInstruction(Mips source, String line, int location, int indexInInstructionList, ArrayList<String> ackLabelList) throws InstructionErrorException {
+        Instruction resultInstruction = new Instruction(location);
+        line = line.toLowerCase().strip();
+        String originalInstructionString = line;
+
+        if (line.endsWith(":")) {
+            return null;
+            //return new Label(location, source.getProgram().getLabelList(), line.replaceAll(":", "").toLowerCase(), indexInInstructionList,ackLabelList);
         }
 
         String[] splittedLine = line.split("\\s+", 2); //用空白分開 指令和運算元
@@ -200,7 +223,7 @@ public class InstructionHandler {
         if (operation.equals("j")) {
             try {
                 operandLine.replaceAll("\\s+", "");
-                return new JTypeInstruction(originalInstructionString, location, JTypeInstruction.Jop, new Label(source.getProgram().getLabelList(), operandLine));
+                return new JTypeInstruction(originalInstructionString, location, JTypeInstruction.Jop, new Label(source.getProgram().getLabelList(), operandLine,ackLabelList));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
             }
@@ -305,7 +328,7 @@ public class InstructionHandler {
                 labelName = labelName.replaceAll("\\s+", "");
 
                 return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.BEQop, OperandHandler.stringToRegister(source, compareFrom)
-                        , OperandHandler.stringToRegister(source, compareTo), new Label(source.getProgram().getLabelList(), labelName));
+                        , OperandHandler.stringToRegister(source, compareTo), new Label(source.getProgram().getLabelList(), labelName,ackLabelList));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
             }
@@ -322,7 +345,7 @@ public class InstructionHandler {
                 labelName = labelName.replaceAll("\\s+", "");
 
                 return new ITypeInstruction(originalInstructionString, location, ITypeInstruction.BNEop, OperandHandler.stringToRegister(source, compareFrom)
-                        , OperandHandler.stringToRegister(source, compareTo), new Label(source.getProgram().getLabelList(), labelName));
+                        , OperandHandler.stringToRegister(source, compareTo), new Label(source.getProgram().getLabelList(), labelName,ackLabelList));
             } catch (Exception e) {
                 throw new InstructionErrorException(location);
             }
