@@ -1,4 +1,5 @@
-# mdImages
+![](mdImages/MIPSlogo.png)
+
 
 
 快來看看全新的MIPS模擬器!
@@ -18,7 +19,6 @@ GUI介紹
 -------
 
 ![](mdImages/newButtonNormal.png) 建立新的檔案
-
 ![](mdImages/runButtonNormal.png) 一次執行到底 \
 ![](mdImages/openButtonNormal.png) 開啟舊檔
 ![](mdImages/stepButtonNormal.png) 一行行執行 \
