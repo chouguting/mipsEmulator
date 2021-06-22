@@ -12,7 +12,7 @@ public class Label extends Instruction implements Operand {
     private int nextExecutionIndex; //紀錄這個LABEL的下一行指令是指令庫中的第幾個
 
     //跑到這個CONSTRUCTOR代表這個LABEL是真正的標籤
-    public Label(long locationInProgram, ArrayList<Label> labelList, String name, int nextExecutionIndex) throws InstructionErrorException {
+    public Label(long locationInProgram, ArrayList<Label> labelList, String name, int nextExecutionIndex,ArrayList<String> ackLabelList) throws InstructionErrorException {
         super(locationInProgram);
         location = locationInProgram;
         boolean notFound = true;
@@ -28,7 +28,7 @@ public class Label extends Instruction implements Operand {
     }
 
     //跑到這個CONSTRUCTOR代表這個LABEL在指令中(是個OPERAND)
-    public Label(ArrayList<Label> labelList, String name) throws InstructionErrorException {
+    public Label(ArrayList<Label> labelList, String name,ArrayList<String> ackLabelList) throws InstructionErrorException {
         super(0);
         boolean notFound = true;
         for (Label label : labelList) {
