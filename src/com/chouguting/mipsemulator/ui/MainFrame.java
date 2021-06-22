@@ -11,7 +11,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         ImageIcon appIcon=null;
         try {
-            appIcon=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("images/appIcon.png")));
+            appIcon=new ImageIcon(ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("MIPSlogo.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
